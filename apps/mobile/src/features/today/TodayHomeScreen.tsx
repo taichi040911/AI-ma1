@@ -14,6 +14,7 @@ import {
   fetchTodayStep,
   fetchWeeklyPlan
 } from "./api";
+import { TodayDetailScreen } from "./TodayDetailScreen";
 
 const EMPTY_STATE = "今日の気分や状態を入力してみましょう";
 
@@ -48,8 +49,8 @@ export function TodayHomeScreen() {
   const [currentFocus, setCurrentFocus] = useState<string | null>(null);
   const [currentPace, setCurrentPace] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [showTodayDetail, setShowTodayDetail] = useState(false);
   const [expandedStepIndex, setExpandedStepIndex] = useState<number | null>(null);
+  const [showDetailScreen, setShowDetailScreen] = useState(false);
 
   const summaryText = useMemo(() => {
     if (currentState) {
@@ -123,6 +124,23 @@ export function TodayHomeScreen() {
     );
   }
 
+  if (showDetailScreen) {
+    return (
+      <TodayDetailScreen
+        title={todayTitle}
+        description={todayDesc}
+        estimatedMinutes={todayMinutes}
+        reason={todayReason}
+        actionType={todayActionType}
+        targetType={todayTargetType}
+        targetId={todayTargetId}
+        weeklyTheme={weeklyTheme}
+        weeklyComment={weeklyComment}
+        onBack={() => setShowDetailScreen(false)}
+      />
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}
@@ -136,27 +154,9 @@ export function TodayHomeScreen() {
         ) : null}
         {todayDesc ? <Text style={styles.heroDesc}>{todayDesc}</Text> : null}
         {todayReason ? <Text style={styles.heroReason}>{todayReason}</Text> : null}
-        <Pressable
-          style={styles.heroButton}
-          onPress={() => setShowTodayDetail((prev) => !prev)}
-        >
-          <Text style={styles.heroButtonText}>
-            {showTodayDetail ? "詳細を閉じる" : "詳細を見る"}
-          </Text>
+        <Pressable style={styles.heroButton} onPress={() => setShowDetailScreen(true)}>
+          <Text style={styles.heroButtonText}>詳細を見る</Text>
         </Pressable>
-        {showTodayDetail ? (
-          <View style={styles.heroDetail}>
-            <Text style={styles.heroDetailText}>
-              種類: {todayActionType ?? "未設定"}
-            </Text>
-            <Text style={styles.heroDetailText}>
-              対象: {todayTargetType ?? "指定なし"}
-            </Text>
-            {todayTargetId ? (
-              <Text style={styles.heroDetailText}>ID: {todayTargetId}</Text>
-            ) : null}
-          </View>
-        ) : null}
         <Pressable style={styles.refreshButton} onPress={onRefresh}>
           <Text style={styles.refreshButtonText}>再読み込み</Text>
         </Pressable>
@@ -282,14 +282,6 @@ const styles = StyleSheet.create({
   heroButtonText: {
     color: "#F7F2EA",
     fontSize: 12
-  },
-  heroDetail: {
-    marginTop: 10
-  },
-  heroDetailText: {
-    color: "#E9E1D6",
-    fontSize: 12,
-    marginTop: 4
   },
   refreshButton: {
     marginTop: 12,
