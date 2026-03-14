@@ -1,0 +1,47 @@
+﻿Area,Screen ID,Screen Name,Purpose,Primary API(s),Secondary API(s),Notes
+Onboarding,1,Login / Register,会員登録・ログイン,POST /auth/register; POST /auth/login,POST /auth/send-otp; POST /auth/verify-otp,フロント+認証API
+Onboarding,2,OTP Verify,認証コード検証,POST /auth/verify-otp,POST /auth/send-otp,再送導線あり
+Onboarding,3,Basic Profile,基本プロフィール入力,PUT /me/profile,GET /me,プロフィール初期保存
+Onboarding,4,Purpose Select,利用目的入力,PUT /me/purposes,GET /me,複数選択対応
+Onboarding,5,Interest Select,興味タグ入力,PUT /me/interests,GET /me,検索UIあり
+Onboarding,6,Availability Select,活動時間入力,PUT /me/availability,GET /me,テンプレ+詳細設定
+Onboarding,7,Verification,本人確認提出,POST /verifications,GET /verifications/status,書類アップロードは別署名URLでも可
+AI Companion,8,AIライフナビ面談,現在地整理・初期面談,POST /ai/life-navigation/start; POST /ai/life-navigation/answer,GET /ai/life-navigation/result,AI担当コア
+AI Companion,9,AIサマリー,面談結果表示,GET /ai/life-navigation/result,GET /me/current-state,初回着地前
+AI Companion,10,今週の伴走プラン,週間アクション提示,GET /ai/weekly-plan,GET /ai/today-step,Todayへ遷移
+Today,11,Today ホーム,今日の一歩・伴走プラン表示,GET /ai/today-step; GET /ai/weekly-plan,GET /me/current-state; GET /notifications,最重要ホーム
+Today,12,今日の一歩 詳細,今日の提案の具体化,GET /ai/today-step,GET /relationships/{id}; GET /co-actions/{id}; GET /events/{id},target_entity_typeで分岐
+Action,13,Action 一覧,行動起点の接点探索,GET /co-actions,GET /recommendations/events,カテゴリ別表示
+Action,14,共同行動詳細,共同行動の理由・相手・イベント表示,GET /co-actions/{id},GET /recommendations/users/{id}; GET /events/{id},why_for_youが重要
+Action,15,イベント一覧,イベント一覧閲覧,GET /events,GET /recommendations/events,フィルタつき
+Action,16,イベント詳細,イベント詳細閲覧,GET /events/{id},POST /events/{id}/apply,参加前導線
+Action,17,イベント参加完了,参加完了表示,POST /events/{id}/apply,GET /notifications,完了トースト/次導線
+Connections,18,Connections 一覧,関係一覧閲覧,GET /relationships,GET /matches; GET /recommendations/users,tab別表示
+Connections,19,おすすめユーザー一覧,候補一覧,GET /recommendations/users,POST /likes,recommended_entry_mode表示
+Connections,20,ユーザー詳細,候補詳細確認,GET /recommendations/users/{id},POST /likes,co_actions表示
+Connections,21,関係ステージ詳細,関係の進め方表示,GET /relationships/{id},GET /relationships/{id}/shared-log,次の一歩表示
+Connections,22,AI共同ログ,関係履歴表示,GET /relationships/{id}/shared-log,GET /relationships/{id},履歴タイムライン
+Messages,23,マッチ一覧,マッチ相手一覧,GET /matches,GET /notifications,未読件数表示
+Messages,24,チャットルーム,チャット本体,GET /chat/rooms/{id}/messages; POST /chat/rooms/{id}/messages,POST /chat/rooms/{id}/ai-suggestions; POST /chat/rooms/{id}/relationship-guidance,関係コーチバナーあり
+Messages,25,AI話題提案モーダル,会話支援,POST /chat/rooms/{id}/ai-suggestions,POST /chat/rooms/{id}/relationship-guidance,suggested_topics表示
+Messages,26,関係コーチ提案モーダル,次の一歩提案,POST /chat/rooms/{id}/relationship-guidance,GET /relationships/{id},best_approach表示
+Messages,27,会う前チェック,安全確認,POST /relationships/{id}/pre-meeting-check,GET /relationships/{id},shared_with_friendなど入力
+Messages,28,通報モーダル,通報送信,POST /reports,POST /chat/rooms/{id}/block,理由選択
+Messages,29,ブロック確認モーダル,相手ブロック,POST /chat/rooms/{id}/block,POST /reports,通報同時導線あり
+Messages,30,会った後振り返り,接点後の振り返り送信,POST /relationships/{id}/reflection,GET /relationships/{id},自然さ・継続意向
+Messages,31,AI共同振り返り結果,振り返り結果表示,POST /relationships/{id}/reflection,GET /relationships/{id},next_best_action表示
+Me,32,Me ホーム,自己状態確認,GET /me; GET /me/current-state,GET /billing/me,状態+課金導線
+Me,33,プロフィール,プロフィール確認/編集,GET /me; PUT /me/profile,PUT /me/purposes; PUT /me/interests; PUT /me/availability,編集導線集約
+Me,34,感情チェックイン,気分記録,POST /me/emotional-checkin,GET /me/current-state,Today反映
+Me,35,本人確認状況,審査状態確認,GET /verifications/status,POST /verifications,差し戻し対応
+Billing,36,Paywall メイン,課金訴求,GET /billing/products,GET /billing/me; GET /entitlements/me,Free/Standard/Premium表示
+Billing,37,プラン比較,比較表表示,GET /billing/products,GET /entitlements/me,機能差分比較
+Billing,38,Add-on 商品一覧,都度課金商品一覧,GET /billing/products,GET /entitlements/me,addonsのみ抽出
+Billing,39,購入確認,購入前確認,POST /billing/subscribe,GET /billing/products,ストア購入直前
+Billing,40,購入完了,購入完了表示,POST /billing/verify-receipt,GET /billing/me; GET /entitlements/me,特典解放表示
+Billing,41,Billing Settings,契約状態確認,GET /billing/me,GET /billing/history; GET /entitlements/me,更新日・自動更新状態
+Billing,42,特典一覧,利用可能特典一覧,GET /entitlements/me,GET /billing/me,残数型entitlement表示
+Billing,43,購入履歴,購入履歴表示,GET /billing/history,GET /billing/me,取引一覧
+Billing,44,特典利用状況,Boost等の残数確認,GET /entitlements/me,POST /boosts/use; POST /super-actions/use,quota型確認
+Billing,45,Boost 実行,Boost使用,POST /boosts/use,GET /entitlements/me,残数更新
+Billing,46,Super Action 実行,特別アクション送信,POST /super-actions/use,GET /entitlements/me,対象ユーザー必須

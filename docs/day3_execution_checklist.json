@@ -1,0 +1,32 @@
+{
+  "day": "Day3",
+  "tasks": [
+    {
+      "ticket_id": "ONB-002",
+      "branch": "feature/onb-002-profile-screen",
+      "done_when": [
+        "Basic Profile screen implemented",
+        "PUT /me/profile connected",
+        "required validation shown",
+        "loading state exists",
+        "success transition exists",
+        "error state exists",
+        "tests added",
+        "lint/test passed"
+      ]
+    },
+    {
+      "ticket_id": "LIFE-001",
+      "branch": "feature/life-001-life-navigation-start-api",
+      "done_when": [
+        "POST /ai/life-navigation/start implemented",
+        "session started per authenticated user",
+        "session_id returned",
+        "first_question returned",
+        "current_state_hint returned",
+        "tests added",
+        "lint/test passed"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "ai-companion-matching-app",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "setup": "bash ./scripts/setup.sh",
+    "lint": "bash ./scripts/lint.sh",
+    "test": "bash ./scripts/test.sh",
+    "test:e2e": "pnpm -r --if-present test:e2e",
+    "dev": "pnpm -r --parallel --if-present dev",
+    "build": "pnpm -r --if-present build",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "format": "pnpm -r --if-present format",
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "ci": "pnpm check",
+    "db:migrate": "pnpm --filter api db:migrate",
+    "db:seed": "bash ./scripts/seed.sh",
+    "openapi:generate": "pnpm -r --if-present openapi:generate",
+    "mobile:dev": "pnpm --filter mobile dev",
+    "admin:dev": "pnpm --filter admin dev",
+    "api:dev": "pnpm --filter api dev"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "typescript": "^5.8.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

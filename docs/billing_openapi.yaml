@@ -1,0 +1,20 @@
+openapi: 3.0.3
+info:
+  title: AI Companion Billing API
+  version: 1.0.0
+paths:
+  /billing/products:
+    get:
+      summary: 有効な商品一覧取得
+  /billing/subscribe:
+    post:
+      summary: 購入開始前の内部記録作成
+  /billing/verify-receipt:
+    post:
+      summary: レシート検証と権限付与
+  /billing/me:
+    get:
+      summary: 現在の契約状況取得
+  /entitlements/me:
+    get:
+      summary: 自分のentitlement一覧取得

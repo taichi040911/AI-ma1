@@ -1,0 +1,6 @@
+﻿Day,Ticket 1,Ticket 2,Main Goal,Definition of Done
+Day1,AUTH-001,AUTH-003,認証入口を作る,register と send-otp が動く
+Day2,AUTH-004,ONB-001,認証画面とプロフィール保存基盤,OTP画面が動き profile API が動く
+Day3,ONB-002,LIFE-001,オンボ画面とAI伴走入口,プロフィール画面と life-navigation start が動く
+Day4,LIFE-002,LIFE-004,AI面談を完了までつなぐ,answer API と面談画面が動く
+Day5,TODAY-001,TODAY-003,Today価値体験を出す,weekly plan API と Todayホームが動く
