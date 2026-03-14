@@ -1,6 +1,6 @@
 import React from "react";
-import { ProfileScreen } from "./features/onboarding/ProfileScreen";
+import { TodayHomeScreen } from "./features/today/TodayHomeScreen";
 
 export default function App() {
-  return <ProfileScreen />;
+  return <TodayHomeScreen />;
 }

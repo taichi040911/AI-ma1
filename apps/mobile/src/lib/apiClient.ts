@@ -14,9 +14,9 @@ export const API_BASE_URL =
   process.env.EXPO_PUBLIC_API_BASE_URL ?? DEFAULT_API_BASE_URL;
 
 async function requestJson<TResponse>(
-  method: "POST" | "PUT",
+  method: "POST" | "PUT" | "GET",
   path: string,
-  body: unknown,
+  body?: unknown,
   token?: string
 ) {
   const headers: Record<string, string> = {
@@ -30,7 +30,7 @@ async function requestJson<TResponse>(
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers,
-    body: JSON.stringify(body)
+    body: body ? JSON.stringify(body) : undefined
   });
 
   const payload = await response.json().catch(() => undefined);
@@ -50,4 +50,8 @@ export function postJson<TResponse>(path: string, body: unknown, token?: string)
 
 export function putJson<TResponse>(path: string, body: unknown, token?: string) {
   return requestJson<TResponse>("PUT", path, body, token);
+}
+
+export function getJson<TResponse>(path: string, token?: string) {
+  return requestJson<TResponse>("GET", path, undefined, token);
 }
