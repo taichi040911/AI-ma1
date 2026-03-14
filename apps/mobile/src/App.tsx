@@ -1,6 +1,6 @@
 import React from "react";
-import { ProfileScreen } from "./features/onboarding/ProfileScreen";
+import { LifeNavigationScreen } from "./features/ai-companion/LifeNavigationScreen";
 
 export default function App() {
-  return <ProfileScreen />;
+  return <LifeNavigationScreen />;
 }
