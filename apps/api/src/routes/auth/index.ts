@@ -2,10 +2,12 @@ import type { FastifyInstance } from "fastify";
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import {
   RegisterRequestSchema,
-  RegisterResponseSchema
+  RegisterResponseSchema,
+  SendOtpRequestSchema,
+  SendOtpResponseSchema
 } from "../../schemas/auth";
 import { ErrorResponseSchema } from "../../schemas/common";
-import { registerHandler } from "../../controllers/authController";
+import { registerHandler, sendOtpHandler } from "../../controllers/authController";
 
 export default async function authRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<TypeBoxTypeProvider>();
@@ -23,5 +25,20 @@ export default async function authRoutes(app: FastifyInstance) {
       }
     },
     registerHandler
+  );
+
+  typedApp.post(
+    "/send-otp",
+    {
+      schema: {
+        body: SendOtpRequestSchema,
+        response: {
+          200: SendOtpResponseSchema,
+          400: ErrorResponseSchema,
+          429: ErrorResponseSchema
+        }
+      }
+    },
+    sendOtpHandler
   );
 }

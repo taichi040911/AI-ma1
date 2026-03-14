@@ -18,3 +18,19 @@ export const RegisterResponseSchema = Type.Object({
     status: Type.String()
   })
 });
+
+export const SendOtpRequestSchema = Type.Object(
+  {
+    channel: Type.Union([Type.Literal("email"), Type.Literal("sms")]),
+    destination: Type.String()
+  },
+  { additionalProperties: false }
+);
+
+export const SendOtpResponseSchema = Type.Object({
+  success: Type.Boolean(),
+  data: Type.Object({
+    sent: Type.Boolean(),
+    expires_in_seconds: Type.Integer({ minimum: 1 })
+  })
+});

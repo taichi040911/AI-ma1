@@ -108,6 +108,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SendOtpResponse'
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: レート制限
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/verify-otp:
     post:
