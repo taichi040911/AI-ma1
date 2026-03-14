@@ -14,6 +14,7 @@ import {
   type CoActionFilter,
   type CoActionItem
 } from "./api";
+import { CoActionDetailScreen } from "./CoActionDetailScreen";
 
 const FILTERS: { label: string; params: CoActionFilter }[] = [
   { label: "すべて", params: {} },
@@ -32,6 +33,7 @@ export function ActionScreen() {
   const [items, setItems] = useState<CoActionItem[]>([]);
   const [activeFilter, setActiveFilter] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
 
   const filterLabel = useMemo(() => FILTERS[activeFilter]?.label ?? "すべて", [
     activeFilter
@@ -83,6 +85,15 @@ export function ActionScreen() {
         <Text style={styles.errorText}>{state.error}</Text>
         <Text style={styles.helperText}>下に引っ張って再読み込みできます。</Text>
       </View>
+    );
+  }
+
+  if (selectedActionId) {
+    return (
+      <CoActionDetailScreen
+        actionId={selectedActionId}
+        onBack={() => setSelectedActionId(null)}
+      />
     );
   }
 
@@ -148,7 +159,10 @@ export function ActionScreen() {
                 ))}
               </View>
               <Text style={styles.cardHint}>AI理由: {item.ai_reason}</Text>
-              <Pressable style={styles.cardButton}>
+              <Pressable
+                style={styles.cardButton}
+                onPress={() => setSelectedActionId(item.id)}
+              >
                 <Text style={styles.cardButtonText}>詳細を見る</Text>
               </Pressable>
             </View>
