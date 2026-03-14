@@ -20,14 +20,18 @@ describe("POST /ai/life-navigation/answer", () => {
   });
 
   it("accepts an answer and returns next question", async () => {
-    const session = lifeNavigationRepository.createSession("session-1");
+    const start = await app.inject({
+      method: "POST",
+      url: "/ai/life-navigation/start"
+    });
+    const startBody = start.json();
 
     const response = await app.inject({
       method: "POST",
       url: "/ai/life-navigation/answer",
       payload: {
-        session_id: session.id,
-        question_code: "LN_Q1",
+        session_id: startBody.data.session_id,
+        question_code: startBody.data.first_question.code,
         answer_text: "test answer"
       }
     });
@@ -40,12 +44,17 @@ describe("POST /ai/life-navigation/answer", () => {
   });
 
   it("rejects invalid session", async () => {
+    const start = await app.inject({
+      method: "POST",
+      url: "/ai/life-navigation/start"
+    });
+    const startBody = start.json();
     const response = await app.inject({
       method: "POST",
       url: "/ai/life-navigation/answer",
       payload: {
-        session_id: "missing",
-        question_code: "LN_Q1",
+        session_id: `${startBody.data.session_id.slice(0, -1)}0`,
+        question_code: startBody.data.first_question.code,
         answer_text: "test"
       }
     });
@@ -56,13 +65,17 @@ describe("POST /ai/life-navigation/answer", () => {
   });
 
   it("rejects question mismatch", async () => {
-    const session = lifeNavigationRepository.createSession("session-2");
+    const start = await app.inject({
+      method: "POST",
+      url: "/ai/life-navigation/start"
+    });
+    const startBody = start.json();
 
     const response = await app.inject({
       method: "POST",
       url: "/ai/life-navigation/answer",
       payload: {
-        session_id: session.id,
+        session_id: startBody.data.session_id,
         question_code: "LN_Q2",
         answer_text: "test"
       }
