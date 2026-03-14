@@ -1,0 +1,46 @@
+{
+  "day": "Day5",
+  "tasks": [
+    {
+      "ticket_id": "TODAY-001",
+      "branch": "feature/today-001-weekly-plan-api",
+      "done_when": [
+        "GET /ai/weekly-plan implemented",
+        "weekly_theme returned",
+        "steps returned",
+        "ai_comment returned",
+        "suggested_mode returned",
+        "step ordering exists",
+        "tests added",
+        "lint/test passed"
+      ]
+    },
+    {
+      "ticket_id": "TODAY-003",
+      "branch": "feature/today-003-today-home-screen",
+      "done_when": [
+        "Today home screen implemented",
+        "today step displayed",
+        "weekly plan displayed",
+        "AI insight displayed",
+        "GET /ai/today-step connected",
+        "GET /ai/weekly-plan connected",
+        "GET /me/current-state used for support display",
+        "loading/empty/error states exist",
+        "next action entry exists",
+        "tests added",
+        "lint/test passed"
+      ]
+    }
+  ],
+  "final_flow_done_when": [
+    "register works",
+    "send otp works",
+    "verify otp works",
+    "basic profile save works",
+    "life navigation starts",
+    "life navigation progresses",
+    "weekly plan returns",
+    "today home shows first value experience"
+  ]
+}

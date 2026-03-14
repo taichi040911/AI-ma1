@@ -1,0 +1,11 @@
+﻿Execution Order,Ticket ID,Title,Type,Priority,Primary API(s),Dependencies,Why Next,Definition of Done
+11,COACT-001,共同行動一覧API,API,P0,GET /co-actions,TODAY-003,Action導線の入口を作る,items返却・filter対応・テストあり
+12,COACT-003,Action画面,UI,P0,GET /co-actions,COACT-001,Todayの次に行動から始める体験を出す,共同行動一覧表示・カテゴリ導線・empty/errorあり
+13,COACT-002,共同行動詳細API,API,P0,GET /co-actions/{id},"COACT-001,REC-001,EVENT-001",行動に合う相手/イベントを返せるようにする,why_for_you・matching_users・matching_events返却
+14,COACT-004,共同行動詳細画面,UI,P0,GET /co-actions/{id},COACT-002,行動詳細から人/イベントへ進める,理由表示・相手/イベント導線・テストあり
+15,REC-001,おすすめユーザー一覧API,API,P0,GET /recommendations/users,"ONB-001,ONB-002,LIFE-004",人の候補一覧を返せるようにする,compatibility・entry_mode・next_best_action返却
+16,REC-005,おすすめユーザー一覧画面,UI,P0,GET /recommendations/users,REC-001,候補一覧を見せる,一覧・フィルタ・empty/errorあり
+17,REC-002,おすすめユーザー詳細API,API,P0,GET /recommendations/users/{id},REC-001,候補詳細を返す,shared_points・current_fit_reason・co_actions返却
+18,REC-006,ユーザー詳細画面,UI,P0,GET /recommendations/users/{id},REC-002,Like前の詳細確認体験を作る,詳細表示・co_actions表示・Like導線あり
+19,MATCH-001,いいね送信API,API,P0,POST /likes,REC-002,候補から接点開始を成立させる,like作成・相互時match返却・テストあり
+20,MATCH-002,マッチ一覧API,API,P0,GET /matches,MATCH-001,マッチ後の遷移先を作る,match一覧・unread_count・relationship_stage返却

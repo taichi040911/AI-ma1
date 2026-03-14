@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": [
+      "react",
+      "react-native",
+      "vitest/globals"
+    ],
+    "lib": [
+      "ES2022"
+    ],
+    "moduleResolution": "Bundler",
+    "allowJs": false,
+    "noEmit": true
+  },
+  "include": [
+    "src",
+    "app",
+    "expo-env.d.ts",
+    "vitest.setup.ts"
+  ]
+}

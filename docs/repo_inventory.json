@@ -1,0 +1,11 @@
+{
+  "repo_path": "/mnt/data/ai-companion-codex-ready-repo",
+  "file_count": 59,
+  "key_files_present": {
+    "AGENTS.md": true,
+    "README.md": true,
+    "docs/integrated_openapi_final.yaml": true,
+    "docs/day1_execution_bundle.md": true,
+    "scripts/setup.sh": true
+  }
+}

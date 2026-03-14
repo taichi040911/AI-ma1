@@ -1,0 +1,2007 @@
+openapi: 3.0.3
+info:
+  title: AI Companion Matching App API
+  version: 2.0.0
+  description: >
+    AI伴走型総合マッチングアプリの最終統合OpenAPI。
+    認証、オンボーディング、AI診断、AIライフナビ、Today/伴走プラン、
+    共同行動、推薦、関係ステージ、チャット、イベント、安全機能、
+    通知、課金・entitlement を含む。
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production
+  - url: https://staging-api.example.com/v1
+    description: Staging
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Auth
+  - name: Me
+  - name: Verification
+  - name: AI Diagnosis
+  - name: AI Life Navigation
+  - name: Weekly Plan
+  - name: Co-Actions
+  - name: Recommendations
+  - name: Relationships
+  - name: Likes & Matches
+  - name: Chat
+  - name: Events
+  - name: Reflection
+  - name: Emotional State
+  - name: Reports
+  - name: Notifications
+  - name: Billing
+  - name: Entitlements
+  - name: Usage
+  - name: Billing Webhooks
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: 新規会員登録
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: 登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 重複メール
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: ログイン
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
+  /auth/send-otp:
+    post:
+      tags: [Auth]
+      summary: 認証コード送信
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendOtpRequest'
+      responses:
+        '200':
+          description: 送信成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendOtpResponse'
+
+  /auth/verify-otp:
+    post:
+      tags: [Auth]
+      summary: 認証コード検証
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOtpRequest'
+      responses:
+        '200':
+          description: 検証成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyOtpResponse'
+
+  /me:
+    get:
+      tags: [Me]
+      summary: 自分情報取得
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeResponse'
+
+  /me/profile:
+    put:
+      tags: [Me]
+      summary: プロフィール更新
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateProfileResponse'
+
+  /me/purposes:
+    put:
+      tags: [Me]
+      summary: 利用目的更新
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePurposesRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleUpdatedResponse'
+
+  /me/interests:
+    put:
+      tags: [Me]
+      summary: 興味タグ更新
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInterestsRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleUpdatedResponse'
+
+  /me/availability:
+    put:
+      tags: [Me]
+      summary: 活動時間更新
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAvailabilityRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleUpdatedResponse'
+
+  /me/current-state:
+    get:
+      tags: [Emotional State]
+      summary: 現在状態取得
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentStateResponse'
+
+  /me/emotional-checkin:
+    post:
+      tags: [Emotional State]
+      summary: 感情状態チェックイン
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmotionalCheckinRequest'
+      responses:
+        '200':
+          description: 保存成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmotionalCheckinResponse'
+
+  /verifications:
+    post:
+      tags: [Verification]
+      summary: 本人確認申請
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVerificationRequest'
+      responses:
+        '200':
+          description: 申請成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVerificationResponse'
+
+  /verifications/status:
+    get:
+      tags: [Verification]
+      summary: 本人確認ステータス取得
+      responses:
+        '200':
+          description: ステータス取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationStatusResponse'
+
+  /ai/diagnosis/start:
+    post:
+      tags: [AI Diagnosis]
+      summary: AI診断開始
+      responses:
+        '200':
+          description: 診断開始成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiagnosisStartResponse'
+
+  /ai/diagnosis/answer:
+    post:
+      tags: [AI Diagnosis]
+      summary: AI診断回答送信
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiagnosisAnswerRequest'
+      responses:
+        '200':
+          description: 回答保存成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiagnosisAnswerResponse'
+
+  /ai/diagnosis/result:
+    get:
+      tags: [AI Diagnosis]
+      summary: AI診断結果取得
+      parameters:
+        - in: query
+          name: session_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 結果取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiagnosisResultResponse'
+
+  /ai/life-navigation/start:
+    post:
+      tags: [AI Life Navigation]
+      summary: AIライフナビ面談開始
+      responses:
+        '200':
+          description: 開始成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifeNavigationStartResponse'
+
+  /ai/life-navigation/answer:
+    post:
+      tags: [AI Life Navigation]
+      summary: AIライフナビ回答送信
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifeNavigationAnswerRequest'
+      responses:
+        '200':
+          description: 回答保存成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifeNavigationAnswerResponse'
+
+  /ai/life-navigation/result:
+    get:
+      tags: [AI Life Navigation]
+      summary: AIライフナビ結果取得
+      parameters:
+        - in: query
+          name: session_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 結果取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifeNavigationResultResponse'
+
+  /ai/weekly-plan:
+    get:
+      tags: [Weekly Plan]
+      summary: 今週の伴走プラン取得
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyPlanResponse'
+
+  /ai/today-step:
+    get:
+      tags: [Weekly Plan]
+      summary: 今日の一歩取得
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodayStepResponse'
+
+  /co-actions:
+    get:
+      tags: [Co-Actions]
+      summary: 共同行動一覧取得
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoActionListResponse'
+
+  /co-actions/{id}:
+    get:
+      tags: [Co-Actions]
+      summary: 共同行動詳細取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoActionDetailResponse'
+
+  /recommendations/users:
+    get:
+      tags: [Recommendations]
+      summary: おすすめユーザー一覧取得
+      parameters:
+        - in: query
+          name: purpose
+          schema:
+            type: string
+        - in: query
+          name: prefecture
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 一覧取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRecommendationsResponse'
+
+  /recommendations/users/{id}:
+    get:
+      tags: [Recommendations]
+      summary: おすすめユーザー詳細取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRecommendationDetailResponse'
+
+  /recommendations/events:
+    get:
+      tags: [Recommendations]
+      summary: おすすめイベント一覧取得
+      responses:
+        '200':
+          description: 一覧取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventRecommendationsResponse'
+
+  /relationships:
+    get:
+      tags: [Relationships]
+      summary: 関係一覧取得
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipListResponse'
+
+  /relationships/{id}:
+    get:
+      tags: [Relationships]
+      summary: 関係詳細取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipDetailResponse'
+
+  /relationships/{id}/shared-log:
+    get:
+      tags: [Relationships]
+      summary: AI共同ログ取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedLogResponse'
+
+  /relationships/{id}/pre-meeting-check:
+    post:
+      tags: [Relationships]
+      summary: 会う前チェック実行
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreMeetingCheckRequest'
+      responses:
+        '200':
+          description: チェック成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreMeetingCheckResponse'
+
+  /relationships/{id}/reflection:
+    post:
+      tags: [Reflection]
+      summary: 接点後振り返り保存
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelationshipReflectionRequest'
+      responses:
+        '200':
+          description: 保存成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipReflectionResponse'
+
+  /likes:
+    post:
+      tags: [Likes & Matches]
+      summary: いいね送信
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLikeRequest'
+      responses:
+        '200':
+          description: 送信成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLikeResponse'
+
+  /matches:
+    get:
+      tags: [Likes & Matches]
+      summary: マッチ一覧取得
+      responses:
+        '200':
+          description: 一覧取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchesResponse'
+
+  /chat/rooms/{id}/messages:
+    get:
+      tags: [Chat]
+      summary: チャットメッセージ一覧取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessagesResponse'
+    post:
+      tags: [Chat]
+      summary: メッセージ送信
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendChatMessageRequest'
+      responses:
+        '200':
+          description: 送信成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendChatMessageResponse'
+
+  /chat/rooms/{id}/ai-suggestions:
+    post:
+      tags: [Chat]
+      summary: AI会話提案取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 提案取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiSuggestionsResponse'
+
+  /chat/rooms/{id}/relationship-guidance:
+    post:
+      tags: [Relationships]
+      summary: 関係コーチ提案取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipGuidanceResponse'
+
+  /chat/rooms/{id}/block:
+    post:
+      tags: [Chat]
+      summary: 相手をブロック
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ブロック成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockUserResponse'
+
+  /events:
+    get:
+      tags: [Events]
+      summary: イベント一覧取得
+      responses:
+        '200':
+          description: 一覧取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsResponse'
+
+  /events/{id}:
+    get:
+      tags: [Events]
+      summary: イベント詳細取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDetailResponse'
+
+  /events/{id}/apply:
+    post:
+      tags: [Events]
+      summary: イベント参加申請
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 参加申請成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventApplyResponse'
+
+  /reports:
+    post:
+      tags: [Reports]
+      summary: 通報送信
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReportRequest'
+      responses:
+        '200':
+          description: 通報成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateReportResponse'
+
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: 通知一覧取得
+      responses:
+        '200':
+          description: 一覧取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationsResponse'
+
+  /notifications/read:
+    put:
+      tags: [Notifications]
+      summary: 通知既読更新
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkNotificationsReadRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleUpdatedResponse'
+
+  /billing/products:
+    get:
+      tags: [Billing]
+      summary: 有効な商品一覧取得
+      responses:
+        '200':
+          description: 商品一覧取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProductsResponse'
+
+  /billing/subscribe:
+    post:
+      tags: [Billing]
+      summary: 購入開始前の内部記録作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscribeRequest'
+      responses:
+        '200':
+          description: 購入開始成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribeResponse'
+
+  /billing/verify-receipt:
+    post:
+      tags: [Billing]
+      summary: レシート検証と権限付与
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyReceiptRequest'
+      responses:
+        '200':
+          description: 検証成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyReceiptResponse'
+
+  /billing/me:
+    get:
+      tags: [Billing]
+      summary: 現在の契約状況取得
+      responses:
+        '200':
+          description: 契約状況取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingMeResponse'
+
+  /entitlements/me:
+    get:
+      tags: [Entitlements]
+      summary: 自分のentitlement一覧取得
+      responses:
+        '200':
+          description: entitlement取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitlementsResponse'
+
+  /boosts/use:
+    post:
+      tags: [Usage]
+      summary: Boost使用
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UseBoostRequest'
+      responses:
+        '200':
+          description: Boost使用成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UseBoostResponse'
+
+  /super-actions/use:
+    post:
+      tags: [Usage]
+      summary: Super Action使用
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UseSuperActionRequest'
+      responses:
+        '200':
+          description: Super Action使用成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UseSuperActionResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [email, password, agreed_to_terms, agreed_to_privacy]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+        agreed_to_terms: { type: boolean }
+        agreed_to_privacy: { type: boolean }
+
+    RegisterResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            user_id: { type: string, format: uuid }
+            email: { type: string }
+            status: { type: string }
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+
+    LoginResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            access_token: { type: string }
+            refresh_token: { type: string }
+            user:
+              type: object
+              properties:
+                id: { type: string, format: uuid }
+                status: { type: string }
+                onboarding_completed: { type: boolean }
+
+    SendOtpRequest:
+      type: object
+      required: [channel, destination]
+      properties:
+        channel:
+          type: string
+          enum: [email, sms]
+        destination: { type: string }
+
+    SendOtpResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            sent: { type: boolean }
+            expires_in_seconds: { type: integer }
+
+    VerifyOtpRequest:
+      type: object
+      required: [channel, destination, code]
+      properties:
+        channel:
+          type: string
+          enum: [email, sms]
+        destination: { type: string }
+        code: { type: string }
+
+    VerifyOtpResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            verified: { type: boolean }
+
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string }
+        status: { type: string }
+
+    Profile:
+      type: object
+      properties:
+        nickname: { type: string }
+        birth_date: { type: string, format: date }
+        gender: { type: string }
+        prefecture: { type: string }
+        city: { type: string }
+        bio: { type: string }
+        ai_summary: { type: string }
+        verification_status: { type: string }
+        current_connection_style_hint: { type: string, nullable: true }
+        preferred_entry_mode: { type: string, nullable: true }
+
+    AvailabilitySlot:
+      type: object
+      properties:
+        day_of_week: { type: integer }
+        start_time: { type: string }
+        end_time: { type: string }
+
+    MeResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            user: { $ref: '#/components/schemas/User' }
+            profile: { $ref: '#/components/schemas/Profile' }
+            purposes:
+              type: array
+              items: { type: string }
+            interests:
+              type: array
+              items: { type: string }
+            availability:
+              type: array
+              items: { $ref: '#/components/schemas/AvailabilitySlot' }
+            current_state: { type: string, nullable: true }
+            weekly_focus: { type: string, nullable: true }
+            emotional_state: { type: string, nullable: true }
+
+    UpdateProfileRequest:
+      type: object
+      required: [nickname, birth_date, gender, prefecture]
+      properties:
+        nickname: { type: string }
+        birth_date: { type: string, format: date }
+        gender: { type: string }
+        prefecture: { type: string }
+        city: { type: string }
+        bio: { type: string }
+
+    UpdateProfileResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            updated: { type: boolean }
+            profile: { $ref: '#/components/schemas/Profile' }
+
+    UpdatePurposesRequest:
+      type: object
+      required: [purposes]
+      properties:
+        purposes:
+          type: array
+          items:
+            type: object
+            required: [code, priority]
+            properties:
+              code: { type: string }
+              priority: { type: integer }
+
+    UpdateInterestsRequest:
+      type: object
+      required: [interests]
+      properties:
+        interests:
+          type: array
+          items: { type: string }
+
+    UpdateAvailabilityRequest:
+      type: object
+      required: [slots]
+      properties:
+        slots:
+          type: array
+          items: { $ref: '#/components/schemas/AvailabilitySlot' }
+
+    CreateVerificationRequest:
+      type: object
+      required: [verification_type, document_url, selfie_url]
+      properties:
+        verification_type: { type: string }
+        document_url: { type: string }
+        selfie_url: { type: string }
+
+    CreateVerificationResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            request_id: { type: string, format: uuid }
+            status: { type: string }
+
+    VerificationStatusResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            verification_type: { type: string }
+            status: { type: string }
+            submitted_at: { type: string, format: date-time }
+
+    DiagnosisQuestion:
+      type: object
+      properties:
+        code: { type: string }
+        text: { type: string }
+        suggestions:
+          type: array
+          items: { type: string }
+
+    DiagnosisStartResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            session_id: { type: string, format: uuid }
+            first_question: { $ref: '#/components/schemas/DiagnosisQuestion' }
+
+    DiagnosisAnswerRequest:
+      type: object
+      required: [session_id, question_code, answer_text]
+      properties:
+        session_id: { type: string, format: uuid }
+        question_code: { type: string }
+        answer_text: { type: string }
+
+    DiagnosisAnswerResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            saved: { type: boolean }
+            next_question:
+              allOf:
+                - $ref: '#/components/schemas/DiagnosisQuestion'
+              nullable: true
+            progress:
+              type: object
+              properties:
+                current: { type: integer }
+                total: { type: integer }
+
+    DiagnosisResultResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            session_id: { type: string, format: uuid }
+            status: { type: string }
+            summary:
+              type: object
+              properties:
+                headline: { type: string }
+                description: { type: string }
+                recommended_styles:
+                  type: array
+                  items: { type: string }
+                match_traits:
+                  type: array
+                  items: { type: string }
+
+    LifeNavigationStartResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            session_id: { type: string, format: uuid }
+            first_question: { $ref: '#/components/schemas/DiagnosisQuestion' }
+            current_state_hint: { type: string }
+
+    LifeNavigationAnswerRequest:
+      type: object
+      required: [session_id, question_code, answer_text]
+      properties:
+        session_id: { type: string, format: uuid }
+        question_code: { type: string }
+        answer_text: { type: string }
+
+    LifeNavigationAnswerResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            next_question:
+              allOf:
+                - $ref: '#/components/schemas/DiagnosisQuestion'
+              nullable: true
+            progress:
+              type: object
+              properties:
+                current: { type: integer }
+                total: { type: integer }
+            tentative_state: { type: string, nullable: true }
+
+    LifeNavigationResultResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            current_state_summary: { type: string }
+            recommended_connection_style: { type: string }
+            recommended_week_plan: { type: string }
+            emotional_state: { type: string, nullable: true }
+            caution_notes:
+              type: array
+              items: { type: string }
+
+    WeeklyPlanStep:
+      type: object
+      properties:
+        step_order: { type: integer }
+        day_hint: { type: string }
+        title: { type: string }
+        description: { type: string }
+        estimated_minutes: { type: integer }
+        action_type: { type: string }
+        target_entity_type: { type: string, nullable: true }
+        target_entity_id: { type: string, format: uuid, nullable: true }
+
+    WeeklyPlanResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            weekly_theme: { type: string }
+            ai_comment: { type: string }
+            suggested_mode: { type: string }
+            steps:
+              type: array
+              items: { $ref: '#/components/schemas/WeeklyPlanStep' }
+
+    TodayStepResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            title: { type: string }
+            description: { type: string }
+            estimated_minutes: { type: integer }
+            action_type: { type: string }
+            target_entity_type: { type: string, nullable: true }
+            target_entity_id: { type: string, format: uuid, nullable: true }
+            reason: { type: string }
+
+    CoActionItem:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        description: { type: string }
+        estimated_minutes: { type: integer, nullable: true }
+        difficulty: { type: string }
+        best_for:
+          type: array
+          items: { type: string }
+        ai_reason: { type: string }
+
+    CoActionListResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/CoActionItem' }
+
+    CoActionDetailResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            action: { $ref: '#/components/schemas/CoActionItem' }
+            why_for_you: { type: string }
+            suitable_connection_modes:
+              type: array
+              items: { type: string }
+            matching_users:
+              type: array
+              items: { $ref: '#/components/schemas/UserRecommendationItem' }
+            matching_events:
+              type: array
+              items: { $ref: '#/components/schemas/EventRecommendationItem' }
+
+    CompatibilitySummary:
+      type: object
+      properties:
+        summary_label: { type: string }
+        reason_text: { type: string }
+        shared_points:
+          type: array
+          items: { type: string }
+
+    UserRecommendationItem:
+      type: object
+      properties:
+        candidate_user_id: { type: string, format: uuid }
+        nickname: { type: string }
+        age: { type: integer }
+        prefecture: { type: string }
+        primary_image_url: { type: string }
+        purposes:
+          type: array
+          items: { type: string }
+        interests:
+          type: array
+          items: { type: string }
+        compatibility: { $ref: '#/components/schemas/CompatibilitySummary' }
+        recommended_entry_mode: { type: string, nullable: true }
+        next_best_action: { type: string, nullable: true }
+        relationship_style_hint: { type: string, nullable: true }
+
+    UserRecommendationsResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/UserRecommendationItem' }
+        meta: { $ref: '#/components/schemas/PaginationMeta' }
+
+    UserRecommendationDetailResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            candidate_user_id: { type: string, format: uuid }
+            nickname: { type: string }
+            age: { type: integer }
+            prefecture: { type: string }
+            bio: { type: string }
+            images:
+              type: array
+              items: { type: string }
+            purposes:
+              type: array
+              items: { type: string }
+            interests:
+              type: array
+              items: { type: string }
+            compatibility:
+              type: object
+              properties:
+                reason_text: { type: string }
+                shared_points:
+                  type: array
+                  items: { type: string }
+                recommended_first_action: { type: string }
+            natural_start_style: { type: string, nullable: true }
+            current_fit_reason: { type: string, nullable: true }
+            co_actions:
+              type: array
+              items: { type: string }
+            avoid_rushing_points:
+              type: array
+              items: { type: string }
+
+    EventRecommendationItem:
+      type: object
+      properties:
+        event_id: { type: string, format: uuid }
+        title: { type: string }
+        purpose: { type: string }
+        prefecture: { type: string }
+        venue_name: { type: string }
+        start_at: { type: string, format: date-time }
+        end_at: { type: string, format: date-time }
+        participants_count: { type: integer }
+        capacity: { type: integer }
+        ai_reason: { type: string }
+
+    EventRecommendationsResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/EventRecommendationItem' }
+        meta: { $ref: '#/components/schemas/PaginationMeta' }
+
+    RelationshipItem:
+      type: object
+      properties:
+        relationship_id: { type: string, format: uuid }
+        user_summary:
+          type: object
+          properties:
+            user_id: { type: string, format: uuid }
+            nickname: { type: string }
+            primary_image_url: { type: string, nullable: true }
+        current_stage: { type: string }
+        next_best_action: { type: string }
+        ai_note: { type: string, nullable: true }
+        last_interaction_summary: { type: string, nullable: true }
+
+    RelationshipListResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/RelationshipItem' }
+
+    RelationshipDetailResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            relationship_id: { type: string, format: uuid }
+            current_stage: { type: string }
+            stage_reason: { type: string }
+            natural_next_actions:
+              type: array
+              items: { type: string }
+            not_recommended_actions:
+              type: array
+              items: { type: string }
+            shared_context:
+              type: array
+              items: { type: string }
+            ai_guidance: { type: string }
+
+    SharedLogResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            first_topics:
+              type: array
+              items: { type: string }
+            shared_topics:
+              type: array
+              items: { type: string }
+            shared_actions:
+              type: array
+              items: { type: string }
+            last_interaction: { type: string, nullable: true }
+            next_topic_hints:
+              type: array
+              items: { type: string }
+            ai_summary: { type: string }
+
+    PreMeetingCheckRequest:
+      type: object
+      required: [meeting_type, duration_minutes, location_type, shared_with_friend]
+      properties:
+        meeting_type: { type: string }
+        duration_minutes: { type: integer }
+        location_type: { type: string }
+        shared_with_friend: { type: boolean }
+
+    PreMeetingCheckResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            readiness_score: { type: integer }
+            safety_flags:
+              type: array
+              items: { type: string }
+            ai_advice: { type: string }
+            suggested_adjustments:
+              type: array
+              items: { type: string }
+
+    RelationshipReflectionRequest:
+      type: object
+      required: [naturalness_score, want_to_continue, comfort_level]
+      properties:
+        naturalness_score: { type: integer }
+        want_to_continue: { type: boolean }
+        comfort_level: { type: integer }
+        next_preference: { type: string, nullable: true }
+        comment: { type: string, nullable: true }
+
+    RelationshipReflectionResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            reflection_summary: { type: string }
+            next_best_action: { type: string }
+            relationship_stage_update: { type: string }
+
+    EmotionalCheckinRequest:
+      type: object
+      required: [mood, social_energy, openness_level]
+      properties:
+        mood: { type: string }
+        social_energy: { type: integer }
+        openness_level: { type: integer }
+        note: { type: string, nullable: true }
+
+    EmotionalCheckinResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            saved: { type: boolean }
+            recommendation_adjustment: { type: string, nullable: true }
+
+    CurrentStateResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            current_mode: { type: string }
+            emotional_state: { type: string }
+            recommended_pace: { type: string }
+            ai_summary: { type: string }
+            this_week_focus: { type: string }
+
+    CreateLikeRequest:
+      type: object
+      required: [to_user_id]
+      properties:
+        to_user_id: { type: string, format: uuid }
+
+    CreateLikeResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            like_id: { type: string, format: uuid }
+            status: { type: string }
+            matched: { type: boolean }
+            match:
+              type: object
+              nullable: true
+              properties:
+                match_id: { type: string, format: uuid }
+                chat_room_id: { type: string, format: uuid }
+
+    MatchesResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  match_id: { type: string, format: uuid }
+                  relationship_stage: { type: string, nullable: true }
+                  next_best_action: { type: string, nullable: true }
+                  ai_note: { type: string, nullable: true }
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      nickname: { type: string }
+                      primary_image_url: { type: string, nullable: true }
+                  last_message:
+                    type: object
+                    nullable: true
+                    properties:
+                      body: { type: string }
+                      created_at: { type: string, format: date-time }
+                  unread_count: { type: integer }
+
+    ChatMessage:
+      type: object
+      properties:
+        message_id: { type: string, format: uuid }
+        sender_user_id: { type: string, format: uuid }
+        message_type: { type: string }
+        body: { type: string }
+        moderation_status: { type: string }
+        created_at: { type: string, format: date-time }
+
+    ChatMessagesResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            room_id: { type: string, format: uuid }
+            relationship_banner: { type: string, nullable: true }
+            suggested_topics:
+              type: array
+              items: { type: string }
+            next_action_hint: { type: string, nullable: true }
+            messages:
+              type: array
+              items: { $ref: '#/components/schemas/ChatMessage' }
+
+    SendChatMessageRequest:
+      type: object
+      required: [message_type, body]
+      properties:
+        message_type: { type: string }
+        body: { type: string }
+
+    SendChatMessageResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            message_id: { type: string, format: uuid }
+            moderation_status: { type: string }
+            created_at: { type: string, format: date-time }
+
+    AiSuggestionsResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            suggestions:
+              type: array
+              items: { type: string }
+
+    RelationshipGuidanceResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            relationship_stage: { type: string }
+            best_approach: { type: string }
+            suggested_topics:
+              type: array
+              items: { type: string }
+            caution_points:
+              type: array
+              items: { type: string }
+            next_action_options:
+              type: array
+              items: { type: string }
+
+    BlockUserResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            blocked: { type: boolean }
+
+    EventListItem:
+      type: object
+      properties:
+        event_id: { type: string, format: uuid }
+        title: { type: string }
+        purpose: { type: string }
+        prefecture: { type: string }
+        venue_name: { type: string }
+        start_at: { type: string, format: date-time }
+        end_at: { type: string, format: date-time }
+        participants_count: { type: integer }
+        capacity: { type: integer }
+
+    EventsResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/EventListItem' }
+
+    EventDetailResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            event_id: { type: string, format: uuid }
+            title: { type: string }
+            description: { type: string }
+            purpose: { type: string }
+            prefecture: { type: string }
+            venue_name: { type: string }
+            start_at: { type: string, format: date-time }
+            end_at: { type: string, format: date-time }
+            participants_count: { type: integer }
+            capacity: { type: integer }
+            host:
+              type: object
+              properties:
+                name: { type: string }
+            notes:
+              type: array
+              items: { type: string }
+            entry_style: { type: string, nullable: true }
+
+    EventApplyResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            applied: { type: boolean }
+            status: { type: string }
+
+    CreateReportRequest:
+      type: object
+      required: [target_type, target_id, reason_code]
+      properties:
+        target_type: { type: string }
+        target_id: { type: string }
+        reason_code: { type: string }
+        detail: { type: string, nullable: true }
+
+    CreateReportResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            report_id: { type: string, format: uuid }
+            status: { type: string }
+
+    NotificationsResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  notification_id: { type: string }
+                  type: { type: string }
+                  title: { type: string }
+                  body: { type: string }
+                  is_read: { type: boolean }
+                  created_at: { type: string, format: date-time }
+
+    MarkNotificationsReadRequest:
+      type: object
+      required: [notification_ids]
+      properties:
+        notification_ids:
+          type: array
+          items: { type: string }
+
+    SubscribeRequest:
+      type: object
+      required: [product_code, store_platform]
+      properties:
+        product_code: { type: string }
+        store_platform:
+          type: string
+          enum: [apple, google, web]
+
+    SubscribeResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            product_code: { type: string }
+            store_platform: { type: string }
+            status: { type: string }
+
+    VerifyReceiptRequest:
+      type: object
+      required: [store_platform, product_code, receipt_data]
+      properties:
+        store_platform:
+          type: string
+          enum: [apple, google, web]
+        product_code: { type: string }
+        receipt_data: { type: string }
+
+    VerifyReceiptResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            subscription_status: { type: string }
+            started_at: { type: string, format: date-time }
+            expires_at: { type: string, format: date-time, nullable: true }
+            entitlements:
+              type: array
+              items: { type: string }
+
+    BillingProductsResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            subscriptions:
+              type: array
+              items: { $ref: '#/components/schemas/BillingProduct' }
+            addons:
+              type: array
+              items: { $ref: '#/components/schemas/BillingProduct' }
+
+    BillingProduct:
+      type: object
+      properties:
+        product_code: { type: string }
+        title: { type: string }
+        description: { type: string }
+        billing_period: { type: string, nullable: true }
+        store_platform: { type: string }
+        product_type: { type: string }
+        plan_type: { type: string, nullable: true }
+
+    BillingMeResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            current_plan:
+              type: object
+              nullable: true
+              properties:
+                product_code: { type: string }
+                status: { type: string }
+                started_at: { type: string, format: date-time }
+                expires_at: { type: string, format: date-time, nullable: true }
+                auto_renew: { type: boolean }
+            entitlements:
+              type: array
+              items: { $ref: '#/components/schemas/EntitlementItem' }
+
+    EntitlementsResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/EntitlementItem' }
+
+    EntitlementItem:
+      type: object
+      properties:
+        entitlement_code: { type: string }
+        is_active: { type: boolean }
+        usage_limit: { type: integer, nullable: true }
+        used_count: { type: integer }
+        valid_to: { type: string, format: date-time, nullable: true }
+
+    UseBoostRequest:
+      type: object
+      required: [boost_type]
+      properties:
+        boost_type: { type: string }
+
+    UseBoostResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            started_at: { type: string, format: date-time }
+            ended_at: { type: string, format: date-time }
+            status: { type: string }
+
+    UseSuperActionRequest:
+      type: object
+      required: [target_user_id]
+      properties:
+        target_user_id: { type: string, format: uuid }
+
+    UseSuperActionResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            used: { type: boolean }
+            remaining_credits: { type: integer }
+
+    SimpleUpdatedResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          properties:
+            updated: { type: boolean }
+
+    SimpleSuccessResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          type: object
+          nullable: true
+
+    PaginationMeta:
+      type: object
+      properties:
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+
+    ErrorResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details:
+              type: array
+              items:
+                type: object

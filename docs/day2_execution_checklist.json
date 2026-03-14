@@ -1,0 +1,13 @@
+{
+  "day": "Day2",
+  "tasks": [
+    {
+      "ticket_id": "AUTH-004",
+      "branch": "feature/auth-004-otp-verify-screen"
+    },
+    {
+      "ticket_id": "ONB-001",
+      "branch": "feature/onb-001-profile-api"
+    }
+  ]
+}

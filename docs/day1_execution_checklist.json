@@ -1,0 +1,27 @@
+{
+  "day": "Day1",
+  "tasks": [
+    {
+      "ticket_id": "AUTH-001",
+      "branch": "feature/auth-001-register-api",
+      "done_when": [
+        "POST /auth/register implemented",
+        "required validation added",
+        "duplicate email error exists",
+        "tests added",
+        "lint/test passed"
+      ]
+    },
+    {
+      "ticket_id": "AUTH-003",
+      "branch": "feature/auth-003-send-otp-api",
+      "done_when": [
+        "POST /auth/send-otp implemented",
+        "rate limit exists",
+        "expires_in_seconds returned",
+        "tests added",
+        "lint/test passed"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+﻿Ticket ID,Epic,Issue Type,Summary,Priority,Owner,Status,Labels,Dependencies,Sprint,Acceptance Criteria
+AUTH-001,EPIC-01 認証,Feature,メールアドレス新規登録APIを実装する,P0,バックエンド,Backlog,AUTH,,Sprint 1,メール重複時409、正常時user_id返却、規約未同意は登録不可
+AUTH-002,EPIC-01 認証,Feature,新規登録画面を実装する,P0,フロント,Backlog,AUTH,AUTH-001,Sprint 1,メール/電話切替、バリデーション表示、登録後認証画面へ遷移
+AUTH-003,EPIC-01 認証,Feature,OTP送信APIを実装する,P0,バックエンド,Backlog,AUTH,AUTH-001,Sprint 1,email/sms対応、expires_in_seconds返却、レート制限あり
+AUTH-004,EPIC-01 認証,Feature,OTP認証画面を実装する,P0,フロント,Backlog,AUTH,AUTH-003,Sprint 1,6桁入力、成功遷移、期限切れ/不正コード表示
+AUTH-005,EPIC-01 認証,Feature,ログインAPIを実装する,P0,バックエンド,Backlog,AUTH,AUTH-001,Sprint 1,JWT発行、401返却、suspendedユーザー拒否
+AUTH-006,EPIC-01 認証,Feature,ログイン画面を実装する,P0,フロント,Backlog,AUTH,AUTH-005,Sprint 1,成功時ホーム/途中オンボーディング遷移、トークン保存
+ONB-001,EPIC-02 オンボーディング,Feature,基本プロフィール更新APIを実装する,P0,バックエンド,Backlog,ONBOARDING,AUTH-005,Sprint 1,必須項目バリデーション、更新済プロフィール返却
+ONB-002,EPIC-02 オンボーディング,Feature,基本プロフィール入力画面を実装する,P0,フロント,Backlog,ONBOARDING,ONB-001,Sprint 1,必須不足で進めない、保存後次画面遷移
+ONB-003,EPIC-02 オンボーディング,Feature,利用目的更新APIを実装する,P0,バックエンド,Backlog,ONBOARDING,ONB-001,Sprint 1,複数目的保存、priority重複不可
+ONB-004,EPIC-02 オンボーディング,Feature,利用目的選択画面を実装する,P0,フロント,Backlog,ONBOARDING,ONB-003,Sprint 1,複数選択可、保存後次画面遷移
+ONB-005,EPIC-02 オンボーディング,Feature,興味タグ更新APIを実装する,P0,バックエンド,Backlog,ONBOARDING,ONB-001,Sprint 1,複数タグ保存
+ONB-006,EPIC-02 オンボーディング,Feature,興味タグ選択画面を実装する,P0,フロント,Backlog,ONBOARDING,ONB-005,Sprint 1,検索、選択済み表示、保存可能
+ONB-007,EPIC-02 オンボーディング,Feature,活動時間更新APIを実装する,P0,バックエンド,Backlog,ONBOARDING,ONB-001,Sprint 1,複数スロット保存、時間妥当性チェック
+ONB-008,EPIC-02 オンボーディング,Feature,活動時間設定画面を実装する,P0,フロント,Backlog,ONBOARDING,ONB-007,Sprint 1,テンプレ選択＋詳細設定可能
+VER-001,EPIC-03 本人確認,Feature,本人確認申請APIを実装する,P0,バックエンド,Backlog,SAFETY,AUTH-005,Sprint 1,request_id返却、pending保存
+VER-002,EPIC-03 本人確認,Feature,本人確認ステータス取得APIを実装する,P0,バックエンド,Backlog,SAFETY,VER-001,Sprint 1,最新ステータス取得
+VER-003,EPIC-03 本人確認,Feature,本人確認画面を実装する,P0,フロント,Backlog,SAFETY,"VER-001,VER-002",Sprint 1,アップロード、審査中/承認/差し戻し表示
+AI-001,EPIC-04 AI診断,Feature,AI診断開始APIを実装する,P0,バックエンド/AI,Backlog,AI,AUTH-005,Sprint 2,session_id、first_question返却
+AI-002,EPIC-04 AI診断,Feature,AI診断回答保存APIを実装する,P0,バックエンド/AI,Backlog,AI,AI-001,Sprint 2,回答保存、next_question/progress返却
+AI-003,EPIC-04 AI診断,Feature,AI診断結果取得APIを実装する,P0,バックエンド/AI,Backlog,AI,"AI-001,AI-002",Sprint 2,headline/description/recommended_styles返却
+AI-005,EPIC-04 AI診断,Feature,AI診断チャットUIを実装する,P0,フロント,Backlog,AI,"AI-001,AI-002",Sprint 2,回答送信で次問進行、進捗表示
+AI-006,EPIC-04 AI診断,Feature,AI診断結果画面を実装する,P0,フロント,Backlog,AI,AI-003,Sprint 2,headline/description表示、編集/確定導線
+LIFE-001,EPIC-04A AIライフナビ,Feature,AIライフナビ面談開始APIを実装する,P0,バックエンド/AI,Backlog,AI_COMPANION,AUTH-005,Sprint A,session_id、first_question、current_state_hintを返す
+LIFE-002,EPIC-04A AIライフナビ,Feature,AIライフナビ回答APIを実装する,P0,バックエンド/AI,Backlog,AI_COMPANION,LIFE-001,Sprint A,回答保存、next_question、tentative_state返却
+LIFE-003,EPIC-04A AIライフナビ,Feature,AIライフナビ結果APIを実装する,P0,バックエンド/AI,Backlog,AI_COMPANION,"LIFE-001,LIFE-002",Sprint A,current_state_summary、recommended_connection_style、recommended_week_plan返却
+LIFE-004,EPIC-04A AIライフナビ,Feature,AIライフナビ面談画面を実装する,P0,フロント,Backlog,AI_COMPANION,"LIFE-001,LIFE-002",Sprint A,チャット形式進行、進捗表示、候補チップ表示
+LIFE-005,EPIC-04A AIライフナビ,Feature,AIライフナビ結果画面を実装する,P0,フロント,Backlog,AI_COMPANION,LIFE-003,Sprint A,今の状態、向いている接点、今週の方針表示
+TODAY-001,EPIC-04B Today / 伴走プラン,Feature,今週の伴走プラン取得APIを実装する,P0,バックエンド/AI,Backlog,AI_COMPANION,LIFE-003,Sprint A,weekly_theme、ai_comment、stepsを返す
+TODAY-002,EPIC-04B Today / 伴走プラン,Feature,今日の一歩取得APIを実装する,P0,バックエンド/AI,Backlog,AI_COMPANION,TODAY-001,Sprint A,title、description、estimated_minutes、target返却
+TODAY-003,EPIC-04B Today / 伴走プラン,Feature,Todayホーム画面を実装する,P0,フロント,Backlog,AI_COMPANION,"TODAY-001,TODAY-002",Sprint A,今日の一歩、今週の伴走プラン、AIからの気づき表示
+TODAY-004,EPIC-04B Today / 伴走プラン,Feature,今週の伴走プラン詳細画面を実装する,P0,フロント,Backlog,AI_COMPANION,TODAY-001,Sprint A,ステップ表示、別案表示、実行導線
+COACT-001,EPIC-05A 共同行動,Feature,共同行動一覧APIを実装する,P0,バックエンド,Backlog,CO_ACTION,,Sprint B,difficulty/mood/purpose filter対応、items返却
+COACT-002,EPIC-05A 共同行動,Feature,共同行動詳細APIを実装する,P0,バックエンド/AI,Backlog,CO_ACTION,"COACT-001,REC-001,EVENT-001",Sprint B,why_for_you、matching_users、matching_events返却
+COACT-003,EPIC-05A 共同行動,Feature,Action画面を実装する,P0,フロント,Backlog,CO_ACTION,COACT-001,Sprint B,おすすめ共同行動、気軽/少人数/イベント導線表示
+COACT-004,EPIC-05A 共同行動,Feature,共同行動詳細画面を実装する,P0,フロント,Backlog,CO_ACTION,COACT-002,Sprint B,合う理由表示、相手/イベント一覧遷移
+REC-001,EPIC-05 推薦,Feature,おすすめユーザー一覧APIを実装する,P0,バックエンド,Backlog,DISCOVERY,"ONB-003,ONB-005,ONB-007,AI-003",Sprint 2,purpose/prefecture/page/limit対応、compatibility返却
+REC-002,EPIC-05 推薦,Feature,おすすめユーザー詳細APIを実装する,P0,バックエンド,Backlog,DISCOVERY,REC-001,Sprint 2,共通点、recommended_first_action返却
+REC-003,EPIC-05 推薦,Feature,おすすめイベント一覧APIを実装する,P0,バックエンド,Backlog,DISCOVERY,EVENT-001,Sprint 2,ai_reason含む、フィルタ対応
+REC-004,EPIC-05 推薦,Feature,ホーム画面を実装する,P0,フロント,Backlog,DISCOVERY,"REC-001,REC-003",Sprint 2,おすすめユーザー/イベント表示、ローディング/空状態対応
+REC-005,EPIC-05 推薦,Feature,おすすめユーザー一覧画面を実装する,P0,フロント,Backlog,DISCOVERY,REC-001,Sprint 2,一覧、フィルタ、empty state
+REC-006,EPIC-05 推薦,Feature,候補ユーザー詳細画面を実装する,P0,フロント,Backlog,DISCOVERY,REC-002,Sprint 2,共通点、初回接点提案、いいね/保存/スキップ
+REL-001,EPIC-06A 関係ステージ,Feature,relationship_states作成・更新ロジックを実装する,P0,バックエンド/AI,Backlog,RELATIONSHIP,"MATCH-001,CHAT-001,EVENT-003",Sprint B,user pairごとにrelationship_state保持、stage更新
+REL-002,EPIC-06A 関係ステージ,Feature,関係一覧APIを実装する,P0,バックエンド,Backlog,RELATIONSHIP,REL-001,Sprint B,recommended/growing/recent取得
+REL-003,EPIC-06A 関係ステージ,Feature,関係詳細APIを実装する,P0,バックエンド/AI,Backlog,RELATIONSHIP,REL-001,Sprint B,current_stage、natural_next_actions、ai_guidance返却
+REL-004,EPIC-06A 関係ステージ,Feature,AI共同ログAPIを実装する,P0,バックエンド/AI,Backlog,RELATIONSHIP,REL-001,Sprint B,first_topics、shared_topics、next_topic_hints返却
+REL-005,EPIC-06A 関係ステージ,Feature,Connections画面を実装する,P0,フロント,Backlog,RELATIONSHIP,REL-002,Sprint C,おすすめ/これから育てる/最近つながったタブ表示
+REL-006,EPIC-06A 関係ステージ,Feature,関係ステージ詳細画面を実装する,P0,フロント,Backlog,RELATIONSHIP,REL-003,Sprint C,今自然なこと、急がなくてよいこと、次の一歩表示
+REL-007,EPIC-06A 関係ステージ,Feature,AI共同ログ画面を実装する,P0,フロント,Backlog,RELATIONSHIP,REL-004,Sprint C,共通テーマ、接点履歴、次に話すヒント表示
+MATCH-001,EPIC-06 マッチ/チャット,Feature,いいね送信APIを実装する,P0,バックエンド,Backlog,MATCH_CHAT,REC-002,Sprint 3,pendingまたはmatched返却、matched時chat_room生成
+MATCH-002,EPIC-06 マッチ/チャット,Feature,マッチ一覧取得APIを実装する,P0,バックエンド,Backlog,MATCH_CHAT,"MATCH-001,CHAT-001",Sprint 3,未読数、最終メッセージ返却
+MATCH-004,EPIC-06 マッチ/チャット,Feature,マッチ一覧画面を実装する,P0,フロント,Backlog,MATCH_CHAT,MATCH-002,Sprint 3,一覧表示、空状態あり
+CHAT-001,EPIC-06 マッチ/チャット,Feature,メッセージ一覧取得APIを実装する,P0,バックエンド,Backlog,MATCH_CHAT,MATCH-001,Sprint 3,時系列、moderation_status含む
+CHAT-002,EPIC-06 マッチ/チャット,Feature,メッセージ送信APIを実装する,P0,バックエンド,Backlog,MATCH_CHAT,CHAT-001,Sprint 3,message_id返却、不適切表現で422
+CHAT-003,EPIC-06 マッチ/チャット,Feature,AI会話提案APIを実装する,P0,バックエンド/AI,Backlog,MATCH_CHAT,CHAT-001,Sprint 3,3件以上提案返却
+CHAT-004,EPIC-06 マッチ/チャット,Feature,ブロックAPIを実装する,P0,バックエンド,Backlog,MATCH_CHAT,CHAT-001,Sprint 3,blocked=true返却、今後のやりとり遮断
+CHAT-005,EPIC-06 マッチ/チャット,Feature,チャット画面を実装する,P0,フロント,Backlog,MATCH_CHAT,"CHAT-001,CHAT-002,CHAT-003,CHAT-004",Sprint 3,送受信表示、AI提案、通報/ブロック導線
+COACH-001,EPIC-06B 関係コーチ,Feature,関係コーチAPIを実装する,P0,バックエンド/AI,Backlog,RELATIONSHIP,"CHAT-001,REL-003",Sprint C,relationship_stage、best_approach、suggested_topics返却
+COACH-002,EPIC-06B 関係コーチ,Feature,チャット画面に関係コーチバナーを追加する,P0,フロント,Backlog,RELATIONSHIP,COACH-001,Sprint C,AIの一言、話題提案、次の一歩導線追加
+EVENT-001,EPIC-07 イベント,Feature,イベント一覧取得APIを実装する,P0,バックエンド,Backlog,EVENT,,Sprint 4,募集中イベント返却、日時・場所・参加人数返却
+EVENT-002,EPIC-07 イベント,Feature,イベント詳細取得APIを実装する,P0,バックエンド,Backlog,EVENT,EVENT-001,Sprint 4,開催概要、主催者、注意事項返却
+EVENT-003,EPIC-07 イベント,Feature,イベント参加申請APIを実装する,P0,バックエンド,Backlog,EVENT,EVENT-001,Sprint 4,重複申請不可、applied/approved返却
+EVENT-004,EPIC-07 イベント,Feature,イベント後フィードバックAPIを実装する,P1,バックエンド,Backlog,EVENT,EVENT-003,Sprint 4,満足度、再参加意向、コメント保存
+EVENT-005,EPIC-07 イベント,Feature,イベント一覧画面を実装する,P0,フロント,Backlog,EVENT,EVENT-001,Sprint 4,一覧、フィルタ、詳細遷移
+EVENT-006,EPIC-07 イベント,Feature,イベント詳細画面を実装する,P0,フロント,Backlog,EVENT,"EVENT-002,EVENT-003",Sprint 4,参加申請、申請済み状態表示
+SAFE2-001,EPIC-07A 会う前チェック,Feature,会う前チェックAPIを実装する,P0,バックエンド/AI,Backlog,SAFETY,REL-003,Sprint D,readiness_score、safety_flags、ai_advice返却
+SAFE2-002,EPIC-07A 会う前チェック,Feature,会う前チェック画面を実装する,P0,フロント,Backlog,SAFETY,SAFE2-001,Sprint D,チェックリスト、予定共有導線あり
+REFL-001,EPIC-07A 会う前チェック,Feature,接点後振り返りAPIを実装する,P0,バックエンド/AI,Backlog,REFLECTION,REL-001,Sprint D,reflection_summary、next_best_action、relationship_stage_update返却
+REFL-002,EPIC-07A 会う前チェック,Feature,会った後振り返り画面を実装する,P0,フロント,Backlog,REFLECTION,REFL-001,Sprint D,自然さ、継続意向、次に合う形入力
+SAFE-001,EPIC-08 通報/通知,Feature,通報APIを実装する,P0,バックエンド,Backlog,SAFETY,AUTH-005,Sprint 4,reason_code保存、report_id返却
+SAFE-002,EPIC-08 通報/通知,Feature,通報モーダルを実装する,P0,フロント,Backlog,SAFETY,SAFE-001,Sprint 4,理由選択、詳細入力、完了トースト
+NOTIF-001,EPIC-08 通報/通知,Feature,通知一覧APIを実装する,P1,バックエンド,Backlog,NOTIFICATION,"MATCH-001,CHAT-002,EVENT-003",Sprint 4,is_read、created_at順返却
+NOTIF-002,EPIC-08 通報/通知,Feature,通知既読更新APIを実装する,P1,バックエンド,Backlog,NOTIFICATION,NOTIF-001,Sprint 4,複数件更新可能
+NOTIF-003,EPIC-08 通報/通知,Feature,通知一覧画面を実装する,P1,フロント,Backlog,NOTIFICATION,"NOTIF-001,NOTIF-002",Sprint 4,一覧表示、empty stateあり
+STATE-001,EPIC-09A 現在状態/感情,Feature,感情チェックインAPIを実装する,P1,バックエンド,Backlog,STATE,,Sprint E,mood/social_energy/openness_level保存、recommendation_adjustment返却
+STATE-002,EPIC-09A 現在状態/感情,Feature,現在状態取得APIを実装する,P1,バックエンド/AI,Backlog,STATE,STATE-001,Sprint E,current_mode、emotional_state、recommended_pace返却
+STATE-003,EPIC-09A 現在状態/感情,Feature,Me画面に今の状態セクションを追加する,P1,フロント,Backlog,STATE,STATE-002,Sprint E,今の状態、今週の方針、最近の変化表示
+STATE-004,EPIC-09A 現在状態/感情,Feature,感情状態チェックインUIを実装する,P1,フロント,Backlog,STATE,STATE-001,Sprint E,mood/social_energy/openness_level入力
+MYP-001,EPIC-09 マイページ/設定,Feature,マイページ画面を実装する,P1,フロント,Backlog,PROFILE,GET /me,Sprint 4,AIサマリー、本人確認状況、設定導線表示
+MYP-002,EPIC-09 マイページ/設定,Feature,設定画面を実装する,P1,フロント,Backlog,PROFILE,,Sprint 4,項目一覧、削除確認モーダル
+ADMIN-001,EPIC-10 管理画面,Feature,管理者ログイン機能を実装する,P0,管理画面/バックエンド,Backlog,ADMIN,,Sprint 5,ロール付きログイン可能
+ADMIN-002,EPIC-10 管理画面,Feature,ユーザー一覧画面を実装する,P0,管理画面,Backlog,ADMIN,ADMIN-001,Sprint 5,検索、ステータス確認可能
+ADMIN-003,EPIC-10 管理画面,Feature,本人確認審査画面を実装する,P0,管理画面,Backlog,ADMIN,VER-001,Sprint 5,pending一覧、承認/差し戻し可能
+ADMIN-004,EPIC-10 管理画面,Feature,通報一覧と対応画面を実装する,P0,管理画面,Backlog,ADMIN,SAFE-001,Sprint 5,open/reviewing/resolved変更、ユーザー停止導線
+ADMIN-005,EPIC-10 管理画面,Feature,KPIダッシュボードを実装する,P1,管理画面,Backlog,ADMIN,,Sprint 5,登録数、診断完了率、マッチ率、通報率表示

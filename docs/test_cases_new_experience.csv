@@ -1,0 +1,35 @@
+﻿Test ID,Target,Type,Precondition,Steps,Expected Result,Priority,Scope
+TC-LIFE-001,AIライフナビ開始,正常系,ログイン済み,AIライフナビを開始する,session_id発行、first_question表示,P0,API/UI
+TC-LIFE-002,AIライフナビ回答,正常系,セッション開始済み,候補チップまたは自由入力で回答する,回答保存、next_question、progress更新,P0,API/UI
+TC-LIFE-003,AIライフナビ結果,正常系,全質問回答済み,結果画面を開く,今の状態、向いている接点、今週の方針が表示される,P0,API/UI
+TC-TODAY-001,Todayホーム,正常系,ライフナビ完了済み,Today画面を表示する,今日の一歩、今週の伴走プラン、AIからの気づきが表示される,P0,UI
+TC-TODAY-002,今日の一歩,正常系,Todayデータあり,今日の一歩カードをタップ,対象の接点詳細に遷移する,P0,UI
+TC-PLAN-001,今週の伴走プラン,正常系,weekly plan生成済み,今週の伴走プラン詳細を開く,3件以上のstepが順序付きで表示される,P0,API/UI
+TC-PLAN-002,今週の伴走プラン再生成,正常系,weekly plan生成済み,別案を見るを押す,新しいプランが返る,P1,API/UI
+TC-COACT-001,共同行動一覧,正常系,co_actions登録済み,Action画面を表示する,おすすめ共同行動一覧が表示される,P0,API/UI
+TC-COACT-002,共同行動フィルタ,正常系,co_actions登録済み,difficulty=easyで絞る,easyのみ表示される,P1,API/UI
+TC-COACT-003,共同行動詳細,正常系,対象co_actionあり,共同行動詳細を開く,why_for_you、matching_users、matching_eventsが表示される,P0,API/UI
+TC-REL-001,relationship_state生成,正常系,相互likeまたはイベント接点あり,関係生成トリガーを発生させる,relationship_stateが1件作成される,P0,API/DB
+TC-REL-002,関係一覧,正常系,relationship_state複数あり,Connections画面を開く,recommended/growing/recentタブで一覧が取得できる,P0,API/UI
+TC-REL-003,関係詳細,正常系,relationship_stateあり,関係詳細を開く,current_stage、natural_next_actions、not_recommended_actionsが表示される,P0,API/UI
+TC-REL-004,AI共同ログ,正常系,関係ログあり,AI共同ログを開く,共通テーマ、接点履歴、次に話すヒントが表示される,P0,API/UI
+TC-COACH-001,関係コーチ取得,正常系,チャットルームあり,relationship-guidance APIを呼ぶ,best_approach、suggested_topics、caution_pointsが返る,P0,API
+TC-COACH-002,関係コーチ表示,正常系,チャットルームあり,チャット画面を開く,上部にAIの一言、話題提案導線が表示される,P0,UI
+TC-SAFE2-001,会う前チェック,正常系,relationship_stateあり,meeting_type/location等を入力して送信,readiness_score、safety_flags、ai_adviceが返る,P0,API/UI
+TC-SAFE2-002,会う前チェック警告,異常/警告,private + 長時間 + 共有なし,会う前チェックを送信,low readiness、警告文言、調整提案が表示される,P0,API/UI
+TC-REFL-001,接点後振り返り,正常系,接点実施後,自然さ、継続意向、次希望を入力して送信,reflection_summary、next_best_actionが返る,P0,API/UI
+TC-STATE-001,感情チェックイン,正常系,ログイン済み,mood/social_energy/opennessを送信,保存されrecommendation_adjustment返る,P1,API/UI
+TC-STATE-002,現在状態表示,正常系,current_state算出済み,Me画面を開く,今の状態、今週の方針、最近の変化が表示される,P1,API/UI
+TC-E2E-001,E2E 初回体験,E2E,新規ユーザー,登録→OTP→基本情報→目的→興味→活動時間→本人確認→AIライフナビ→AIサマリー→Today表示,最後にToday画面まで到達し、今日の一歩が表示される,P0,E2E
+TC-E2E-002,E2E 行動から接点開始,E2E,Today表示済み,Today→Action→共同行動詳細→相手詳細→Like,マッチまたはpendingになり、次アクションが表示される,P0,E2E
+TC-E2E-003,E2E 共同行動からイベント参加,E2E,共同行動詳細表示可能,Action→共同行動詳細→イベント詳細→参加申請,参加申請完了し、通知が作成される,P0,E2E
+TC-E2E-004,E2E 関係育成チャット,E2E,マッチ済み・チャットルームあり,Messages→チャット→AI話題提案→メッセージ送信→relationship-guidance確認,メッセージ送信成功、関係コーチが適切に表示される,P0,E2E
+TC-E2E-005,E2E 会う前チェックと振り返り,E2E,関係詳細あり,Connections→関係詳細→会う前チェック→接点実施→振り返り送信,チェック結果表示、振り返り結果で次の一歩が更新される,P0,E2E
+TC-E2E-006,E2E 感情状態連動,E2E,ログイン済み,Me→感情チェックインでtiredを登録→Todayに戻る,Todayの提案が低負荷・安全寄りに変化する,P1,E2E
+TC-E2E-007,E2E 安全導線,E2E,チャット中,不適切発言受信→通報→ブロック,report作成、ブロック成功、今後メッセージ不可,P0,E2E
+TC-E2E-008,E2E 管理画面審査,E2E,本人確認申請と通報データあり,管理画面→本人確認承認→通報reviewing→resolved,ユーザー側ステータス反映、監査ログ記録,P0,E2E
+TC-LIFE-004,AIライフナビ回答,異常系,セッション開始済み,空文字で回答送信,入力必須エラー,P1,API/UI
+TC-COACT-004,共同行動一覧,空状態,該当データなし,難易度hard + 特定moodで絞る,empty state表示,P1,API/UI
+TC-REL-005,関係詳細,境界値,新規relationship_state,詳細表示,current_stage=initialで急がない提案が表示される,P1,API/UI
+TC-REFL-002,接点後振り返り,異常系,relationship_stateあり,naturalness_score=0で送信,バリデーションエラー,P1,API/UI
+TC-STATE-003,感情チェックイン,境界値,ログイン済み,social_energy=6で送信,バリデーションエラー,P1,API/UI
