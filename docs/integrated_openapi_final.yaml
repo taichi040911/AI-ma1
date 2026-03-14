@@ -169,6 +169,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UpdateProfileResponse'
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /me/purposes:
     put:
