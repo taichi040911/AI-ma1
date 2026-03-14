@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -27,6 +28,9 @@ export function TodayHomeScreen() {
   const [todayDesc, setTodayDesc] = useState<string | null>(null);
   const [todayMinutes, setTodayMinutes] = useState<number | null>(null);
   const [todayReason, setTodayReason] = useState<string | null>(null);
+  const [todayActionType, setTodayActionType] = useState<string | null>(null);
+  const [todayTargetType, setTodayTargetType] = useState<string | null>(null);
+  const [todayTargetId, setTodayTargetId] = useState<string | null>(null);
   const [weeklyTheme, setWeeklyTheme] = useState<string | null>(null);
   const [weeklyComment, setWeeklyComment] = useState<string | null>(null);
   const [weeklySteps, setWeeklySteps] = useState<
@@ -35,12 +39,17 @@ export function TodayHomeScreen() {
       day_hint: string;
       description: string;
       estimated_minutes: number;
+      action_type: string;
+      target_entity_type: string | null;
+      target_entity_id: string | null;
     }[]
   >([]);
   const [currentState, setCurrentState] = useState<string | null>(null);
   const [currentFocus, setCurrentFocus] = useState<string | null>(null);
   const [currentPace, setCurrentPace] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [showTodayDetail, setShowTodayDetail] = useState(false);
+  const [expandedStepIndex, setExpandedStepIndex] = useState<number | null>(null);
 
   const summaryText = useMemo(() => {
     if (currentState) {
@@ -63,6 +72,9 @@ export function TodayHomeScreen() {
       setTodayDesc(todayRes.data.description);
       setTodayMinutes(todayRes.data.estimated_minutes);
       setTodayReason(todayRes.data.reason);
+      setTodayActionType(todayRes.data.action_type);
+      setTodayTargetType(todayRes.data.target_entity_type);
+      setTodayTargetId(todayRes.data.target_entity_id);
 
       setWeeklyTheme(weeklyRes.data.weekly_theme);
       setWeeklyComment(weeklyRes.data.ai_comment);
@@ -124,6 +136,30 @@ export function TodayHomeScreen() {
         ) : null}
         {todayDesc ? <Text style={styles.heroDesc}>{todayDesc}</Text> : null}
         {todayReason ? <Text style={styles.heroReason}>{todayReason}</Text> : null}
+        <Pressable
+          style={styles.heroButton}
+          onPress={() => setShowTodayDetail((prev) => !prev)}
+        >
+          <Text style={styles.heroButtonText}>
+            {showTodayDetail ? "詳細を閉じる" : "詳細を見る"}
+          </Text>
+        </Pressable>
+        {showTodayDetail ? (
+          <View style={styles.heroDetail}>
+            <Text style={styles.heroDetailText}>
+              種類: {todayActionType ?? "未設定"}
+            </Text>
+            <Text style={styles.heroDetailText}>
+              対象: {todayTargetType ?? "指定なし"}
+            </Text>
+            {todayTargetId ? (
+              <Text style={styles.heroDetailText}>ID: {todayTargetId}</Text>
+            ) : null}
+          </View>
+        ) : null}
+        <Pressable style={styles.refreshButton} onPress={onRefresh}>
+          <Text style={styles.refreshButtonText}>再読み込み</Text>
+        </Pressable>
       </View>
 
       <View style={styles.section}>
@@ -134,13 +170,30 @@ export function TodayHomeScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>今週の伴走プラン</Text>
-        {weeklySteps.map((step) => (
-          <View key={`${step.day_hint}-${step.title}`} style={styles.planCard}>
+        {weeklySteps.map((step, index) => (
+          <Pressable
+            key={`${step.day_hint}-${step.title}`}
+            style={styles.planCard}
+            onPress={() =>
+              setExpandedStepIndex((prev) => (prev === index ? null : index))
+            }
+          >
             <Text style={styles.planDay}>{step.day_hint}</Text>
             <Text style={styles.planTitle}>{step.title}</Text>
             <Text style={styles.planDesc}>{step.description}</Text>
             <Text style={styles.planMeta}>所要 {step.estimated_minutes} 分</Text>
-          </View>
+            <Text style={styles.planLink}>
+              {expandedStepIndex === index ? "詳細を閉じる" : "詳細を見る"}
+            </Text>
+            {expandedStepIndex === index ? (
+              <View style={styles.planDetail}>
+                <Text style={styles.sectionHint}>種類: {step.action_type}</Text>
+                <Text style={styles.sectionHint}>
+                  対象: {step.target_entity_type ?? "指定なし"}
+                </Text>
+              </View>
+            ) : null}
+          </Pressable>
         ))}
       </View>
 
@@ -217,6 +270,39 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#CBBEAE"
   },
+  heroButton: {
+    marginTop: 12,
+    alignSelf: "flex-start",
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(247, 242, 234, 0.4)",
+    paddingHorizontal: 12,
+    paddingVertical: 6
+  },
+  heroButtonText: {
+    color: "#F7F2EA",
+    fontSize: 12
+  },
+  heroDetail: {
+    marginTop: 10
+  },
+  heroDetailText: {
+    color: "#E9E1D6",
+    fontSize: 12,
+    marginTop: 4
+  },
+  refreshButton: {
+    marginTop: 12,
+    alignSelf: "flex-start",
+    borderRadius: 12,
+    backgroundColor: "rgba(247, 242, 234, 0.12)",
+    paddingHorizontal: 12,
+    paddingVertical: 8
+  },
+  refreshButtonText: {
+    color: "#F7F2EA",
+    fontSize: 12
+  },
   section: {
     paddingHorizontal: 24,
     paddingTop: 20,
@@ -274,5 +360,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 12,
     color: "#8B7C6E"
+  },
+  planLink: {
+    marginTop: 8,
+    fontSize: 12,
+    color: "#1C1A17",
+    textDecorationLine: "underline"
+  },
+  planDetail: {
+    marginTop: 8
   }
 });

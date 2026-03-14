@@ -5,6 +5,12 @@ export type LifeNavigationSession = {
   currentQuestionIndex: number;
 };
 
+export type LifeNavigationAnswer = {
+  question_code: string;
+  answer_text: string;
+  answered_at: number;
+};
+
 export type LifeNavigationQuestion = {
   code: string;
   text: string;
@@ -12,6 +18,7 @@ export type LifeNavigationQuestion = {
 };
 
 const sessions = new Map<string, LifeNavigationSession>();
+const answersBySession = new Map<string, LifeNavigationAnswer[]>();
 
 const questionBank: LifeNavigationQuestion[] = [
   {
@@ -49,6 +56,15 @@ export const lifeNavigationRepository = {
     sessions.set(session.id, session);
     return session;
   },
+  addAnswer(sessionId: string, answer: Omit<LifeNavigationAnswer, "answered_at">) {
+    const list = answersBySession.get(sessionId) ?? [];
+    list.push({ ...answer, answered_at: Date.now() });
+    answersBySession.set(sessionId, list);
+    return list;
+  },
+  getAnswers(sessionId: string) {
+    return answersBySession.get(sessionId) ?? [];
+  },
   getQuestion(index: number) {
     return questionBank[index] ?? null;
   },
@@ -57,5 +73,6 @@ export const lifeNavigationRepository = {
   },
   reset() {
     sessions.clear();
+    answersBySession.clear();
   }
 };

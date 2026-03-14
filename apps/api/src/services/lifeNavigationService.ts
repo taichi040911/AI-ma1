@@ -4,6 +4,7 @@ import {
   lifeNavigationRepository,
   type LifeNavigationQuestion
 } from "../repositories/lifeNavigationRepository";
+import { currentStateRepository } from "../repositories/currentStateRepository";
 
 export type LifeNavigationStartResult = {
   session_id: string;
@@ -28,7 +29,8 @@ export type LifeNavigationAnswerResult = {
 
 export function startLifeNavigation(userId?: string): LifeNavigationStartResult {
   const sessionId = randomUUID();
-  const session = lifeNavigationRepository.createSession(sessionId, userId);
+  const normalizedUserId = userId ?? "guest";
+  const session = lifeNavigationRepository.createSession(sessionId, normalizedUserId);
   const firstQuestion = lifeNavigationRepository.getQuestion(session.currentQuestionIndex);
 
   if (!firstQuestion) {
@@ -44,6 +46,20 @@ export function startLifeNavigation(userId?: string): LifeNavigationStartResult 
     first_question: firstQuestion,
     current_state_hint: "あなたの最近の心の動きに注目してみましょう。"
   };
+}
+
+function deriveEmotionalState(answer: string) {
+  if (/嬉|楽|ワク|わく|前向き/.test(answer)) {
+    return "前向き";
+  }
+  if (/不安|心配|緊張|疲/.test(answer)) {
+    return "慎重";
+  }
+  return "落ち着き";
+}
+
+function derivePace(answer: string) {
+  return answer.length > 30 ? "ゆったり" : "テンポよく";
 }
 
 export function answerLifeNavigation(
@@ -67,11 +83,24 @@ export function answerLifeNavigation(
     });
   }
 
+  lifeNavigationRepository.addAnswer(session.id, {
+    question_code: input.question_code,
+    answer_text: input.answer_text
+  });
+
   session.currentQuestionIndex += 1;
   lifeNavigationRepository.updateSession(session);
 
   const nextQuestion = lifeNavigationRepository.getQuestion(session.currentQuestionIndex);
   const total = lifeNavigationRepository.totalQuestions();
+
+  currentStateRepository.upsert(session.userId ?? "guest", {
+    current_mode: session.currentQuestionIndex >= total ? "reflect" : "explore",
+    emotional_state: deriveEmotionalState(input.answer_text),
+    recommended_pace: derivePace(input.answer_text),
+    ai_summary: `最近のキーワード: ${input.answer_text.slice(0, 24)}`,
+    this_week_focus: nextQuestion?.text ?? "今週の行動を整理する"
+  });
 
   return {
     next_question: nextQuestion,

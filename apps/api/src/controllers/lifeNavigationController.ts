@@ -3,6 +3,7 @@ import type { Static } from "@sinclair/typebox";
 import {
   LifeNavigationAnswerRequestSchema
 } from "../schemas/lifeNavigation";
+import { extractUserId } from "../lib/auth";
 import {
   answerLifeNavigation,
   startLifeNavigation
@@ -11,7 +12,7 @@ import {
 type LifeNavigationAnswerBody = Static<typeof LifeNavigationAnswerRequestSchema>;
 
 export async function lifeNavigationStartHandler(request: FastifyRequest) {
-  const userId = request.user?.id;
+  const userId = extractUserId(request) ?? request.user?.id;
   const result = startLifeNavigation(userId);
 
   return {
