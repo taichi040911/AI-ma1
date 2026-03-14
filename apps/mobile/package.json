@@ -1,0 +1,14 @@
+{
+  "name": "mobile",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "expo start",
+    "build": "expo export",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:e2e": "echo \"Add mobile E2E runner\""
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "day": "Day4",
+  "tasks": [
+    {
+      "ticket_id": "LIFE-002",
+      "branch": "feature/life-002-life-navigation-answer-api",
+      "done_when": [
+        "POST /ai/life-navigation/answer implemented",
+        "answer saved",
+        "next_question returned",
+        "progress returned",
+        "tentative_state returned",
+        "completion behavior defined for final question",
+        "tests added",
+        "lint/test passed"
+      ]
+    },
+    {
+      "ticket_id": "LIFE-004",
+      "branch": "feature/life-004-life-navigation-screen",
+      "done_when": [
+        "AI life navigation interview screen implemented",
+        "start/answer APIs connected",
+        "chat style UI exists",
+        "progress shown",
+        "suggestion chips exist",
+        "free text input exists",
+        "completion transition exists",
+        "loading/error state exists",
+        "tests added",
+        "lint/test passed"
+      ]
+    }
+  ]
+}

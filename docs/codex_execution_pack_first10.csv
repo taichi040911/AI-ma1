@@ -1,0 +1,11 @@
+﻿Execution Order,Ticket ID,Title,Type,Priority,Primary API(s),Dependencies,Why First,Definition of Done
+1,AUTH-001,新規登録API,API,P0,POST /auth/register,なし,認証の最初の入口を作る,登録成功・重複エラー・必須バリデーション
+2,AUTH-003,OTP送信API,API,P0,POST /auth/send-otp,AUTH-001,本人確認と登録後導線に必要,送信成功・再送制限・期限設定
+3,AUTH-004,OTP認証画面,UI,P0,POST /auth/verify-otp,AUTH-003,登録完了フローを成立させる,6桁入力・成功遷移・失敗表示
+4,ONB-001,基本プロフィール更新API,API,P0,PUT /me/profile,AUTH-005,オンボーディングの保存基盤,必須項目保存・更新レスポンス
+5,ONB-002,基本プロフィール画面,UI,P0,PUT /me/profile,ONB-001,初回ユーザー入力導線,必須入力・保存後次画面
+6,LIFE-001,AIライフナビ開始API,API,P0,POST /ai/life-navigation/start,AUTH-005,AI伴走の入口,session_id・first_question返却
+7,LIFE-002,AIライフナビ回答API,API,P0,POST /ai/life-navigation/answer,LIFE-001,面談進行,回答保存・next_question・progress返却
+8,LIFE-004,AIライフナビ面談画面,UI,P0,POST /ai/life-navigation/start; POST /ai/life-navigation/answer,"LIFE-001,LIFE-002",新体験の核,チャットUI・進捗・候補チップ
+9,TODAY-001,今週の伴走プランAPI,API,P0,GET /ai/weekly-plan,LIFE-002,Todayの核データ,weekly_theme・steps返却
+10,TODAY-003,Todayホーム画面,UI,P0,GET /ai/today-step; GET /ai/weekly-plan; GET /me/current-state,"TODAY-001,LIFE-004",最初の価値体験,今日の一歩・伴走プラン・AI気づき表示
