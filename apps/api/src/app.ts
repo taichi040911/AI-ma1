@@ -3,6 +3,7 @@ import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import authRoutes from "./routes/auth";
 import meRoutes from "./routes/me";
 import lifeNavigationRoutes from "./routes/lifeNavigation";
+import weeklyPlanRoutes from "./routes/weeklyPlan";
 import { registerErrorHandler } from "./lib/errors";
 
 export function buildApp(options: FastifyServerOptions = {}): FastifyInstance {
@@ -13,6 +14,7 @@ export function buildApp(options: FastifyServerOptions = {}): FastifyInstance {
   app.register(authRoutes, { prefix: "/auth" });
   app.register(meRoutes, { prefix: "/me" });
   app.register(lifeNavigationRoutes, { prefix: "/ai/life-navigation" });
+  app.register(weeklyPlanRoutes, { prefix: "/ai" });
 
   app.get("/health", async () => ({ ok: true }));
 
