@@ -9,6 +9,8 @@ warn() { printf "\n[WARN] %s\n" "$*" >&2; }
 run_cmd() { echo "+ $*"; "$@"; }
 
 detect_node_pm() {
+  if [[ -f pnpm-workspace.yaml ]]; then echo "pnpm"; return; fi
+  if [[ -f package.json ]] && grep -q '"packageManager": "pnpm' package.json; then echo "pnpm"; return; fi
   if [[ -f pnpm-lock.yaml ]]; then echo "pnpm"; return; fi
   if [[ -f yarn.lock ]]; then echo "yarn"; return; fi
   if [[ -f bun.lockb || -f bun.lock ]]; then echo "bun"; return; fi
@@ -26,16 +28,17 @@ run_node_lint() {
     return 0
   fi
 
-  if grep -q '"lint"' package.json; then
-    log "Run package.json lint script"
-    case "$pm" in
-      pnpm) run_cmd pnpm lint ;;
-      yarn) run_cmd yarn lint ;;
-      bun)  run_cmd bun run lint ;;
-      npm)  run_cmd npm run lint ;;
-    esac
-    return 0
-  fi
+  log "Run workspace lint scripts"
+  case "$pm" in
+    pnpm)
+      run_cmd pnpm -r --filter "./apps/**" --filter "./packages/**" --if-present lint
+      return 0
+      ;;
+    npm)
+      run_cmd npm --workspaces --if-present run lint
+      return 0
+      ;;
+  esac
 
   if command -v npx >/dev/null 2>&1; then
     if [[ -f eslint.config.js || -f eslint.config.mjs || -f .eslintrc || -f .eslintrc.js || -f .eslintrc.cjs || -f .eslintrc.json ]]; then

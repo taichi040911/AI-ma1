@@ -9,11 +9,76 @@ warn() { printf "\n[WARN] %s\n" "$*" >&2; }
 run_cmd() { echo "+ $*"; "$@"; }
 
 detect_node_pm() {
+  if [[ -f pnpm-workspace.yaml ]]; then echo "pnpm"; return; fi
+  if [[ -f package.json ]] && grep -q '"packageManager": "pnpm' package.json; then echo "pnpm"; return; fi
   if [[ -f pnpm-lock.yaml ]]; then echo "pnpm"; return; fi
   if [[ -f yarn.lock ]]; then echo "yarn"; return; fi
   if [[ -f bun.lockb || -f bun.lock ]]; then echo "bun"; return; fi
   if [[ -f package-lock.json || -f package.json ]]; then echo "npm"; return; fi
   echo ""
+}
+
+list_workspaces() {
+  local dirs=()
+  local base
+  for base in "$ROOT_DIR"/apps "$ROOT_DIR"/packages; do
+    [[ -d "$base" ]] || continue
+    local dir
+    for dir in "$base"/*; do
+      [[ -f "$dir/package.json" ]] || continue
+      dirs+=("$dir")
+    done
+  done
+  printf "%s\n" "${dirs[@]}"
+}
+
+has_node_script() {
+  local dir="$1"
+  local script="$2"
+  node - "$dir" "$script" <<'NODE'
+const fs = require("fs");
+const path = process.argv[2];
+const script = process.argv[3];
+try {
+  const pkg = JSON.parse(fs.readFileSync(`${path}/package.json`, "utf8"));
+  process.exit(pkg.scripts && pkg.scripts[script] ? 0 : 1);
+} catch {
+  process.exit(1);
+}
+NODE
+}
+
+has_test_files() {
+  local dir="$1"
+  if command -v rg >/dev/null 2>&1; then
+    rg --files -g "*.test.*" -g "*.spec.*" -g "**/__tests__/**/*" "$dir" | rg -q .
+    return $?
+  fi
+  find "$dir" -type f \\( -name "*.test.*" -o -name "*.spec.*" -o -path "*/__tests__/*" \\) -print -quit | grep -q .
+}
+
+run_workspace_script() {
+  local script="$1"
+  local require_tests="$2"
+  local ran="false"
+  local dir
+
+  while IFS= read -r dir; do
+    if ! has_node_script "$dir" "$script"; then
+      continue
+    fi
+    if [[ "$require_tests" == "true" ]] && ! has_test_files "$dir"; then
+      warn "テストファイルが見つからないため ${dir#$ROOT_DIR/} の ${script} をスキップします。"
+      continue
+    fi
+    log "Run ${script} in ${dir#$ROOT_DIR/}"
+    run_cmd pnpm --filter "${dir#$ROOT_DIR/}" "$script"
+    ran="true"
+  done < <(list_workspaces)
+
+  if [[ "$ran" != "true" ]]; then
+    warn "${script} を実行できるワークスペースがありませんでした。"
+  fi
 }
 
 run_node_tests() {
@@ -26,29 +91,21 @@ run_node_tests() {
     return 0
   fi
 
-  if grep -q '"test"' package.json; then
-    log "Run package.json test script"
-    case "$pm" in
-      pnpm) run_cmd pnpm test ;;
-      yarn) run_cmd yarn test ;;
-      bun)  run_cmd bun test ;;
-      npm)  run_cmd npm test ;;
-    esac
-  else
-    warn "test script が package.json に見つからないため Node テストをスキップします。"
-  fi
+  case "$pm" in
+    pnpm)
+      run_workspace_script "test" "true"
+      run_workspace_script "test:e2e" "false"
+      return 0
+      ;;
+    npm)
+      log "Run workspace tests"
+      run_cmd npm --workspaces --if-present run test
+      run_cmd npm --workspaces --if-present run test:e2e || true
+      return 0
+      ;;
+  esac
 
-  if grep -q '"test:e2e"' package.json; then
-    log "Run package.json test:e2e script"
-    case "$pm" in
-      pnpm) run_cmd pnpm test:e2e ;;
-      yarn) run_cmd yarn test:e2e ;;
-      bun)  run_cmd bun run test:e2e ;;
-      npm)  run_cmd npm run test:e2e ;;
-    esac
-  else
-    warn "test:e2e script がないため E2E をスキップします。"
-  fi
+  warn "workspace runner が見つからないため Node テストをスキップします。"
 }
 
 run_python_tests() {
