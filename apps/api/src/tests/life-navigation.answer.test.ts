@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { FastifyInstance } from "fastify";
 import { buildApp } from "../app";
@@ -20,7 +21,8 @@ describe("POST /ai/life-navigation/answer", () => {
   });
 
   it("accepts an answer and returns next question", async () => {
-    const session = lifeNavigationRepository.createSession("session-1");
+    const sessionId = randomUUID();
+    const session = lifeNavigationRepository.createSession(sessionId);
 
     const response = await app.inject({
       method: "POST",
@@ -40,11 +42,13 @@ describe("POST /ai/life-navigation/answer", () => {
   });
 
   it("rejects invalid session", async () => {
+    const missingSessionId = randomUUID();
+
     const response = await app.inject({
       method: "POST",
       url: "/ai/life-navigation/answer",
       payload: {
-        session_id: "missing",
+        session_id: missingSessionId,
         question_code: "LN_Q1",
         answer_text: "test"
       }
@@ -56,7 +60,8 @@ describe("POST /ai/life-navigation/answer", () => {
   });
 
   it("rejects question mismatch", async () => {
-    const session = lifeNavigationRepository.createSession("session-2");
+    const sessionId = randomUUID();
+    const session = lifeNavigationRepository.createSession(sessionId);
 
     const response = await app.inject({
       method: "POST",
