@@ -6,6 +6,7 @@ import lifeNavigationRoutes from "./routes/lifeNavigation";
 import weeklyPlanRoutes from "./routes/weeklyPlan";
 import recommendationRoutes from "./routes/recommendations";
 import coActionRoutes from "./routes/coActions";
+import coActionDetailRoutes from "./routes/coActionDetail";
 import { registerErrorHandler } from "./lib/errors";
 
 export function buildApp(options: FastifyServerOptions = {}): FastifyInstance {
@@ -19,6 +20,7 @@ export function buildApp(options: FastifyServerOptions = {}): FastifyInstance {
   app.register(weeklyPlanRoutes, { prefix: "/ai" });
   app.register(recommendationRoutes, { prefix: "/recommendations" });
   app.register(coActionRoutes, { prefix: "/co-actions" });
+  app.register(coActionDetailRoutes, { prefix: "/co-actions" });
 
   app.get("/health", async () => ({ ok: true }));
 

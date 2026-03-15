@@ -465,6 +465,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CoActionDetailResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /recommendations/users:
     get:
