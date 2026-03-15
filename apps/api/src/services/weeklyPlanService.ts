@@ -55,3 +55,11 @@ export function getWeeklyPlan(): WeeklyPlanResult {
     ]
   };
 }
+
+export function pickTodayStep(steps: WeeklyPlanStep[]) {
+  if (steps.length === 0) {
+    return null;
+  }
+  const index = new Date().getDay() % steps.length;
+  return steps[index];
+}

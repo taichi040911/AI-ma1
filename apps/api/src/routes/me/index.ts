@@ -7,6 +7,8 @@ import {
 } from "../../schemas/profile";
 import { ErrorResponseSchema } from "../../schemas/common";
 import { updateProfileHandler } from "../../controllers/meController";
+import { currentStateHandler } from "../../controllers/meStateController";
+import { CurrentStateResponseSchema } from "../../schemas/meState";
 
 export default async function meRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<TypeBoxTypeProvider>();
@@ -25,5 +27,17 @@ export default async function meRoutes(app: FastifyInstance) {
       }
     },
     updateProfileHandler
+  );
+
+  typedApp.get(
+    "/current-state",
+    {
+      schema: {
+        response: {
+          200: CurrentStateResponseSchema
+        }
+      }
+    },
+    currentStateHandler
   );
 }

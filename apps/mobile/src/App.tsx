@@ -1,6 +1,6 @@
 import React from "react";
-import { ActionScreen } from "./features/action/ActionScreen";
+import { TodayHomeScreen } from "./features/today/TodayHomeScreen";
 
 export default function App() {
-  return <ActionScreen />;
+  return <TodayHomeScreen />;
 }

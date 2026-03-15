@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth";
 import meRoutes from "./routes/me";
 import lifeNavigationRoutes from "./routes/lifeNavigation";
 import weeklyPlanRoutes from "./routes/weeklyPlan";
+import todayRoutes from "./routes/today";
 import recommendationRoutes from "./routes/recommendations";
 import coActionRoutes from "./routes/coActions";
 import coActionDetailRoutes from "./routes/coActionDetail";
@@ -18,6 +19,7 @@ export function buildApp(options: FastifyServerOptions = {}): FastifyInstance {
   app.register(meRoutes, { prefix: "/me" });
   app.register(lifeNavigationRoutes, { prefix: "/ai/life-navigation" });
   app.register(weeklyPlanRoutes, { prefix: "/ai" });
+  app.register(todayRoutes, { prefix: "/ai" });
   app.register(recommendationRoutes, { prefix: "/recommendations" });
   app.register(coActionRoutes, { prefix: "/co-actions" });
   app.register(coActionDetailRoutes, { prefix: "/co-actions" });
