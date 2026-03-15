@@ -422,6 +422,23 @@ paths:
     get:
       tags: [Co-Actions]
       summary: 共同行動一覧取得
+      parameters:
+        - in: query
+          name: mood
+          schema:
+            type: string
+        - in: query
+          name: purpose
+          schema:
+            type: string
+        - in: query
+          name: group_type
+          schema:
+            type: string
+        - in: query
+          name: difficulty
+          schema:
+            type: string
       responses:
         '200':
           description: 取得成功
