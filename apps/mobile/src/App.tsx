@@ -1,6 +1,6 @@
 import React from "react";
-import { ProfileScreen } from "./features/onboarding/ProfileScreen";
+import { ActionScreen } from "./features/action/ActionScreen";
 
 export default function App() {
-  return <ProfileScreen />;
+  return <ActionScreen />;
 }
