@@ -18,6 +18,87 @@ detect_node_pm() {
   echo ""
 }
 
+list_workspaces() {
+  local dirs=()
+  local base
+  for base in "$ROOT_DIR"/apps "$ROOT_DIR"/packages; do
+    [[ -d "$base" ]] || continue
+    local dir
+    for dir in "$base"/*; do
+      [[ -f "$dir/package.json" ]] || continue
+      dirs+=("$dir")
+    done
+  done
+  printf "%s\n" "${dirs[@]}"
+}
+
+has_node_script() {
+  local dir="$1"
+  local script="$2"
+  node - "$dir" "$script" <<'NODE'
+const fs = require("fs");
+const path = process.argv[2];
+const script = process.argv[3];
+try {
+  const pkg = JSON.parse(fs.readFileSync(`${path}/package.json`, "utf8"));
+  process.exit(pkg.scripts && pkg.scripts[script] ? 0 : 1);
+} catch {
+  process.exit(1);
+}
+NODE
+}
+
+get_package_name() {
+  local dir="$1"
+  node - "$dir" <<'NODE'
+const fs = require("fs");
+const path = process.argv[2];
+try {
+  const pkg = JSON.parse(fs.readFileSync(`${path}/package.json`, "utf8"));
+  console.log(pkg.name || "");
+} catch {
+  process.exit(1);
+}
+NODE
+}
+
+has_lint_files() {
+  local dir="$1"
+  if command -v rg >/dev/null 2>&1; then
+    rg --files -g "*.{js,jsx,ts,tsx,mjs,cjs,cts,mts}" "$dir" | rg -q .
+    return $?
+  fi
+  find "$dir" -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" -o -name "*.mjs" -o -name "*.cjs" -o -name "*.cts" -o -name "*.mts" \) -print -quit | grep -q .
+}
+
+run_workspace_lint() {
+  local ran="false"
+  local dir
+
+  while IFS= read -r dir; do
+    if ! has_node_script "$dir" "lint"; then
+      continue
+    fi
+    if ! has_lint_files "$dir"; then
+      warn "Lint 対象が見つからないため ${dir#$ROOT_DIR/} の lint をスキップします。"
+      continue
+    fi
+    local package_name
+    package_name="$(get_package_name "$dir")"
+    if [[ -z "$package_name" ]]; then
+      warn "package.json に name がないため ${dir#$ROOT_DIR/} の lint をスキップします。"
+      continue
+    fi
+    log "Run lint in ${dir#$ROOT_DIR/}"
+    run_cmd pnpm --filter "$package_name" lint
+    ran="true"
+  done < <(list_workspaces)
+
+  if [[ "$ran" != "true" ]]; then
+    warn "lint を実行できるワークスペースがありませんでした。"
+  fi
+}
+
 run_node_lint() {
   local pm
   pm="$(detect_node_pm)"
@@ -31,7 +112,7 @@ run_node_lint() {
   log "Run workspace lint scripts"
   case "$pm" in
     pnpm)
-      run_cmd pnpm -r --filter "./apps/**" --filter "./packages/**" --if-present lint
+      run_workspace_lint
       return 0
       ;;
     npm)

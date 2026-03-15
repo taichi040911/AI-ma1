@@ -48,13 +48,27 @@ try {
 NODE
 }
 
+get_package_name() {
+  local dir="$1"
+  node - "$dir" <<'NODE'
+const fs = require("fs");
+const path = process.argv[2];
+try {
+  const pkg = JSON.parse(fs.readFileSync(`${path}/package.json`, "utf8"));
+  console.log(pkg.name || "");
+} catch {
+  process.exit(1);
+}
+NODE
+}
+
 has_test_files() {
   local dir="$1"
   if command -v rg >/dev/null 2>&1; then
     rg --files -g "*.test.*" -g "*.spec.*" -g "**/__tests__/**/*" "$dir" | rg -q .
     return $?
   fi
-  find "$dir" -type f \\( -name "*.test.*" -o -name "*.spec.*" -o -path "*/__tests__/*" \\) -print -quit | grep -q .
+  find "$dir" -type f \( -name "*.test.*" -o -name "*.spec.*" -o -path "*/__tests__/*" \) -print -quit | grep -q .
 }
 
 run_workspace_script() {
@@ -71,8 +85,14 @@ run_workspace_script() {
       warn "テストファイルが見つからないため ${dir#$ROOT_DIR/} の ${script} をスキップします。"
       continue
     fi
+    local package_name
+    package_name="$(get_package_name "$dir")"
+    if [[ -z "$package_name" ]]; then
+      warn "package.json に name がないため ${dir#$ROOT_DIR/} の ${script} をスキップします。"
+      continue
+    fi
     log "Run ${script} in ${dir#$ROOT_DIR/}"
-    run_cmd pnpm --filter "${dir#$ROOT_DIR/}" "$script"
+    run_cmd pnpm --filter "$package_name" "$script"
     ran="true"
   done < <(list_workspaces)
 

@@ -20,5 +20,9 @@ export function listUserRecommendations(filter: RecommendationFilter) {
       }
       return true;
     })
-    .map(({ purpose_tags, ...rest }) => rest);
+    .map((item) => {
+      const { purpose_tags, ...rest } = item;
+      void purpose_tags;
+      return rest;
+    });
 }
